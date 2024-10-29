@@ -10,11 +10,6 @@ body {
     filter: drop-shadow(0 0 0.75rem black)
 }
 
-#content {
-    background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url('/images/background1.jpeg');
-    background-size: 100% auto;
-}
-
 #navbar {
     background: rgb(202,152,251);
     background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
@@ -27,7 +22,7 @@ svg {
 }
 
 .navbar-brand {
-    margin: auto;
+    float:right;
 }
 
 .inputs {
