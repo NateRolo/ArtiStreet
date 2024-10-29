@@ -27,7 +27,8 @@
 
   <div class="inputs">
     <div class="mb-3" id="image">
-      <input class="form-control" type="file" accept="image/png, image/gif, image/jpeg">
+      <label for="img-upload" id="img-label">Add image</label>
+      <input id="img-upload" class="form-control" type="file" accept="image/png, image/gif, image/jpeg">
     </div>
 
     <div class="mb-3" id="title">
@@ -40,11 +41,18 @@
       <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
         placeholder="(Optional) Write a little bit about the piece..."></textarea>
     </div>
-    <button type="button" class="btn btn-primary btn-sm" id="save_button">Save</button>
-    <button type="button" class="btn btn-secondary btn-sm" id="cancel_button">Cancel</button>
+
   </div>
-
-
+  <div class="button-container">
+    <ul>
+      <li>
+        <button type="button" class="btn btn-primary btn-sm" id="save_button">Save</button>
+      </li>
+      <li>
+        <button type="button" class="btn btn-secondary btn-sm" id="cancel_button">Cancel</button>
+      </li>
+    </ul>
+  </div>
   <ul class="nav nav-pills nav-fill fixed-bottom bg-body-tertiary">
     <li class="nav-item">
       <a class="nav-link" aria-current="page" href="#"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
