@@ -22,18 +22,14 @@ svg {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 1vw;
+    padding-top: 20px;
+    width: 90vw;
+    margin: auto;
     grid-template-areas: 
         "image image title title"
         "image image location location"
         "description description description description"
-        "description description description description"
-        "description description description description"
-        "description description description description"
-        "description description description description"
-        ". buttons buttons ."
-
-    
-    ;
+        ". save cancel .";
 }
 
 #image {
@@ -52,6 +48,10 @@ svg {
     grid-area: description;
 }
 
-.inputs[button]{
-    grid-area: buttons;
+#save_button {
+    grid-area: save;
+}
+
+#cancel_button {
+    grid-area: cancel;
 }
