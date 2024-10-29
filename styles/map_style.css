@@ -1,0 +1,89 @@
+body {
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+    display: grid;
+    grid-template-columns: 10% 80% 10%; /* Sidebar, main content, sidebar */
+    grid-template-rows: 10% 90%;       /* Header and main content area */
+    min-height: 100vh;
+}
+
+.container {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-column: 2;                    /* Place in the main content area */
+    grid-row: 2;                       /* Place below the header */
+    padding-top: 20px;
+}
+
+.card {
+    width: 60rem;                      /* Set width for card */
+    border-radius: 15px;               /* Rounded corners */
+    background-color: #ffffff;         /* Background color */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.card-title {
+    font-size: 1.5rem;                 /* Title size */
+    margin: 0;
+}
+
+.card-text {
+    font-size: 1.2rem;                 /* Text size */
+}
+
+.card-body {
+    padding: 1.5rem;                   /* Padding for spacing */
+}
+
+/* Navbar logo styling */
+#navbar-logo {
+    object-fit: contain;
+    width: 12vw;
+}
+
+svg {
+    width: 80px;
+    height: 80px;
+}
+
+/* Location bar styling */
+.locationBar {
+    background-color: #f8f9fa;
+    grid-column: 1 / span 3;           /* Stretch across the entire row */
+    display: grid;
+    grid-template-columns: repeat(11, 1fr); /* Equal-sized columns */
+    align-items: center;               /* Center items vertically */
+}
+
+.mapPointer {
+    grid-column: 1;  
+    grid-row: 2;                  /* First column */
+    object-fit: cover;
+    margin-left: 20px;
+    /* transform: translate3d(0px, 90px, 0px) */
+}
+.mapPointer img{
+    width: 60px;
+    height: 60px;
+    object-fit: cover;   
+}
+
+.bell {
+    grid-column: 11;
+    grid-row: 2;
+    object-fit: cover;                   
+    /* transform: translate3d(50px, 90px, 0px) */
+}
+.bell img{
+    width: 60px;
+    height: 60px;
+    object-fit: cover;   
+}
+.location{
+    grid-column: 2 / span 3;
+    font-size: 30px;
+    grid-row: 2;
+
+}
