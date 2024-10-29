@@ -17,3 +17,41 @@ svg {
 .navbar-brand {
     margin: auto;
 }
+
+.inputs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 1vw;
+    grid-template-areas: 
+        "image image title title"
+        "image image location location"
+        "description description description description"
+        "description description description description"
+        "description description description description"
+        "description description description description"
+        "description description description description"
+        ". buttons buttons ."
+
+    
+    ;
+}
+
+#image {
+    grid-area: image;
+}
+
+#title {
+    grid-area: title;
+}
+
+#location {
+    grid-area: location;
+}
+
+#description {
+    grid-area: description;
+}
+
+.inputs[button]{
+    grid-area: buttons;
+}
