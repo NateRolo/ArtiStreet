@@ -2,8 +2,10 @@ body {
     padding: 0;
     margin: 0;
     overflow-x: hidden;
-    padding-bottom: 46px;
-    
+}
+
+.navbar-brand {
+    margin: auto;
 }
 
 #navbar-logo {
@@ -15,6 +17,11 @@ body {
 .nav-item svg {
     width: 30px;
     height: 30px;
+}
+
+#back-arrow {
+    width: 5%;
+    color: black;
 }
 /* Post description & Comment styling */
 
@@ -80,7 +87,7 @@ body {
 
 #navbar-mobile {
     background: rgb(202,152,251);
-    background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
+    background: linear-gradient(rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
     box-shadow: 0 30px 50px black;
 }
 
@@ -102,12 +109,15 @@ body {
 
 #navbar-desktop .nav-link {
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
+    font-weight: 650;
+    transition: 0.2s;
 }
 
-#navbar-desktop .nav-link.active {
+#navbar-desktop .nav-link:hover {
     background-color: #7e09f0;
     color: white;
+    transition: 0.2s;
 }
 
 #navbar-desktop {
@@ -118,6 +128,10 @@ body {
 @media screen and (max-width: 1200px){
     #navbar-desktop {
         display: none;
+    }
+    
+    body {
+        padding-bottom: 46px;
     }
 }
 
