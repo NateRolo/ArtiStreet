@@ -15,10 +15,7 @@ svg {
     height: 30px;
 }
 
-#content {
-    background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url('/images/background1.jpeg');
-    background-size: 100% auto;
-}
+
 
 #welcome {
     color: #c7c7c7
@@ -44,21 +41,56 @@ svg {
     color: #ca98fb;
 }
 
-#navbar {
+#navbar-mobile {
     background: rgb(202,152,251);
     background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
     box-shadow: 0 30px 50px black;
 }
 
-#topBtn {
+
+
+#search-button {    
     background-color: #7e09f0;
     border: solid 2px #7e09f0;
     transition: 0.2s;
+    color: white;
+    
 }
 
-#topBtn:hover {
+#search-button:hover {
     transition: 0.2s;
     background-color: #5706a6;
     border: solid 2px #5706a6;
 }
 
+#navbar-desktop .nav-link {
+    color: white;
+    font-size: 1.2rem;
+}
+
+#navbar-desktop .nav-link.active {
+    background-color: #7e09f0;
+    color: white;
+}
+
+#navbar-desktop {
+    background: rgb(202,152,251);
+    background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
+}
+
+@media screen and (max-width: 1200px){
+    #navbar-desktop {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 1200px){
+    #navbar-mobile {
+        display: none;
+    }
+
+    #bottom-nav-mobile{
+        display: none;
+    }
+    
+}
