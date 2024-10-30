@@ -46,9 +46,15 @@ body {
 }
 
 
-.card .bi-person-circle {
+.card.mb-3 .bi-person-circle {
     grid-column: 1;
     width: 60%;
+    grid-row: span 3;
+}
+
+.card .bi-person-circle {
+    grid-column: 1;
+    width: 50%;
     grid-row: span 3;
 }
 
