@@ -9,7 +9,6 @@ body {
 #navbar-logo {
     object-fit: contain;
     width: 12vw;
-    filter: drop-shadow(0 0 0.75rem black)
 }
 
 svg {
@@ -66,6 +65,12 @@ svg {
 
 @media only screen and (min-width: 701px) {
     #bottomNav {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    #sidebar {
         display: none;
     }
 }
