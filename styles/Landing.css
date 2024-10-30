@@ -29,6 +29,7 @@ body {
 svg {
     width: 100px;
     height: 100px;
+    color: black;
 }
 
 .card{
@@ -120,4 +121,10 @@ svg {
     object-fit: cover;
 
 
+}
+.navbar.bg-body-tertiary {
+    position: sticky;  
+    top: 0;            
+    z-index: 1000;     
+    background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
 }
