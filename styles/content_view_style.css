@@ -10,8 +10,8 @@ body {
 
 #navbar-logo {
     object-fit: contain;
-    width: 12vw;
-    filter: drop-shadow(0 0 0.75rem black)
+    width: 20vw;
+    /* filter: drop-shadow(0 0 1rem black); */
 }
 
 #bottom-nav-mobile svg {
