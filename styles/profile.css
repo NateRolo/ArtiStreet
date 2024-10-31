@@ -62,6 +62,9 @@ body {
     width: 100%;
 }
 
+#navbar{
+    background: linear-gradient(rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
+}
 #sidebar ul {
     width: auto;
     margin: 0;
@@ -80,6 +83,20 @@ body {
 
 #sidebar ul > li:first-of-type {
     margin-top: 30px;
+}
+
+#bottomNav svg {
+    width: 45px;
+    height: 45px;
+    color: black;
+}
+
+.navbar-brand {
+    margin: auto;
+}
+
+#navbar-logo {
+    width: 20vw;
 }
 
 @media only screen and (max-width: 700px) {

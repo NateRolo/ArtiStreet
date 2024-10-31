@@ -112,6 +112,12 @@ svg {
     transform: translateX(-30px);
 }
 
+#navbar-logo {
+    object-fit: contain;
+    width: 20vw;
+    /* filter: drop-shadow(0 0 rem black); */
+}
+
 .picture{
     grid-row: 1 / span 8;
     grid-column: 1 / span 4;
@@ -126,5 +132,5 @@ svg {
     position: sticky;  
     top: 0;            
     z-index: 1000;     
-    background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
+    background: linear-gradient(rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
 }
