@@ -1,8 +1,3 @@
-//------------------------------------------------------------------------------
-// Input parameter is a string representing the collection we are reading from
-//------------------------------------------------------------------------------
-
-
 
 async function displayCardsDynamically(collection) {
     let cardTemplate = document.getElementById("post-landing-template");
@@ -18,7 +13,7 @@ async function displayCardsDynamically(collection) {
         let newpost = cardTemplate.content.cloneNode(true);
         console.log("Cloned template content:", newpost); // Log the cloned content
         
-        // Function to fetch image URL.
+        // Function to fetch image URL
         async function getImageURL() {
             try {
                 const storageRef = storage.refFromURL('gs://comp-1800-bby-31.appspot.com/images/ippoVsSendAction.webp');
@@ -37,6 +32,7 @@ async function displayCardsDynamically(collection) {
         const postPictureElement = newpost.querySelector('.post-picture');
         console.log("postPictureElement found:", postPictureElement); // Log check for the element
 
+        // Assign imageURL to .post-picture element
         if (postPictureElement && imageUrl) {
             postPictureElement.src = imageUrl;
         } else {
