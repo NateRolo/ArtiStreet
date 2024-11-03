@@ -1,38 +1,59 @@
 //------------------------------------------------------------------------------
 // Input parameter is a string representing the collection we are reading from
 //------------------------------------------------------------------------------
-function displayCardsDynamically(collection) {
-    let cardTemplate = document.getElementById("post-landing-template"); // Retrieve the HTML element with the ID "hikeCardTemplate" and store it in the cardTemplate variable. 
 
-    db.collection(collection).get()   //the collection called "hikes"
-        .then(allPosts=> {
-            //var i = 1;  //Optional: if you want to have a unique ID for each hike
-            allPosts.forEach(doc => { //iterate thru each doc
-                var title = doc.data().title;       // get value of the title key
-                var location = doc.data().street.concat(", " + doc.data().city); // get location
-                var time = doc.data().time; // get time posted
-                var image = storage.ref("images/ippoVsSendAction.webp");
-                console.log(image);
-                
-                let newpost = cardTemplate.content.cloneNode(true); // Clone the HTML template to create a new card (newcard) that will be filled with Firestore data.
 
-                //update title and text and image
-                newpost.querySelector('.post-location').innerHTML = location;
-                newpost.querySelector('.post-title').innerHTML = title;
-                newpost.querySelector('.post-time').innerHTML = time;
-                newpost.querySelector('.post-picture').src = image; 
 
-                //Optional: give unique ids to all elements for future use
-                // newcard.querySelector('.card-title').setAttribute("id", "ctitle" + i);
-                // newcard.querySelector('.card-text').setAttribute("id", "ctext" + i);
-                // newcard.querySelector('.card-image').setAttribute("id", "cimage" + i);
+async function displayCardsDynamically(collection) {
+    let cardTemplate = document.getElementById("post-landing-template");
 
-                //attach to gallery, Example: "hikes-go-here"
-                document.getElementById(collection + "-go-here").appendChild(newpost);
+    const allPosts = await db.collection(collection).get();
 
-                //i++;   //Optional: iterate variable to serve as unique ID
-            })
-        })
+    allPosts.forEach(async doc => { 
+        const title = doc.data().title;
+        const location = doc.data().street.concat(", " + doc.data().city);
+        const time = doc.data().time;
+        
+        // Clone the template
+        let newpost = cardTemplate.content.cloneNode(true);
+        console.log("Cloned template content:", newpost); // Log the cloned content
+        
+        // Function to fetch image URL.
+        async function getImageURL() {
+            try {
+                const storageRef = storage.refFromURL('gs://comp-1800-bby-31.appspot.com/images/ippoVsSendAction.webp');
+                const url = await storageRef.getDownloadURL();
+                return url;
+            } catch (error) {
+                console.error("Error fetching download URL:", error);
+                return null;
+            }
+        }
+
+        // Fetch the image URL
+        const imageUrl = await getImageURL();
+
+        // Attempt to get .post-picture element
+        const postPictureElement = newpost.querySelector('.post-picture');
+        console.log("postPictureElement found:", postPictureElement); // Log check for the element
+
+        if (postPictureElement && imageUrl) {
+            postPictureElement.src = imageUrl;
+        } else {
+            console.warn("Warning: .post-picture element is missing or image URL failed to load.");
+        }
+
+        // Update other fields
+        newpost.querySelector('.post-location').innerHTML = location;
+        newpost.querySelector('.post-title').innerHTML = title;
+        newpost.querySelector('.post-time').innerHTML = time;
+
+        // Append to the collection container
+        document.getElementById(collection + "-go-here").appendChild(newpost);
+        console.log("New post appended"); // Log successful append
+    });
 }
 
-displayCardsDynamically("posts");  //input param is the name of the collection
+// Call the function
+displayCardsDynamically("posts");
+
