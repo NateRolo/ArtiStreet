@@ -32,7 +32,7 @@ svg {
     color: black;
 }
 
-.post-card{
+.post-card, .post-container {
     border-radius: 50px;
     width: 50rem;
     height: 40rem;
