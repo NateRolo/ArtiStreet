@@ -11,14 +11,16 @@ function displayCardsDynamically(collection) {
                 var title = doc.data().title;       // get value of the title key
                 var location = doc.data().street.concat(", " + doc.data().city); // get location
                 var time = doc.data().time; // get time posted
-                var image = storage.ref(ippoVsSendoAction.webp);
-                let newcard = cardTemplate.content.cloneNode(true); // Clone the HTML template to create a new card (newcard) that will be filled with Firestore data.
+                var image = storage.ref("images/ippoVsSendAction.webp");
+                console.log(image);
+                
+                let newpost = cardTemplate.content.cloneNode(true); // Clone the HTML template to create a new card (newcard) that will be filled with Firestore data.
 
                 //update title and text and image
-                newcard.querySelector('.post-location').innerHTML = location;
-                newcard.querySelector('.post-title').innerHTML = title;
-                newcard.querySelector('.post-time').innerHTML = time;
-                newcard.querySelector('.card-image').src = image; 
+                newpost.querySelector('.post-location').innerHTML = location;
+                newpost.querySelector('.post-title').innerHTML = title;
+                newpost.querySelector('.post-time').innerHTML = time;
+                newpost.querySelector('.post-picture').src = image; 
 
                 //Optional: give unique ids to all elements for future use
                 // newcard.querySelector('.card-title').setAttribute("id", "ctitle" + i);
