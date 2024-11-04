@@ -32,7 +32,8 @@ svg {
     color: black;
 }
 
-.post-card, .post-container {
+.post-card,
+.post-container {
     border-radius: 50px;
     width: 50rem;
     height: 40rem;
@@ -44,8 +45,10 @@ svg {
     grid-template-columns: repeat(4, 1fr);
     z-index: 0;
 }
-.post-topbar{
-    background-color: rgba(0, 0, 0, 0.5); /* Red with 50% transparency */
+
+.post-topbar {
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Red with 50% transparency */
     grid-row: 1 / span 2;
     grid-column: 1 / span 4;
     z-index: 2;
@@ -55,7 +58,8 @@ svg {
     grid-template-columns: 0.05fr 1fr;
     grid-template-rows: 0.1fr 0.1fr 0.1fr 0.1fr;
 }
-.post-bottombar{
+
+.post-bottombar {
     background-color: lightgray;
     grid-row: 9/ span 10;
     grid-column: 1 / span 4;
@@ -65,24 +69,28 @@ svg {
     grid-template-columns: 0.1fr 1fr;
     grid-template-rows: 0.1fr 0.1fr 0.1fr 0.1fr;
 }
-.profileIcon{
+
+.profileIcon {
     grid-row: 1 /span 2;
     grid-column: 1;
     width: 100px;
     height: 100px;
     margin: 15px;
 }
-.post-title{
+
+.post-title {
     font-size: 40px;
     font-weight: bold;
     transform: translateY(20px);
     grid-column: 2;
 }
-.post-time{
+
+.post-time {
     font-size: 30px;
     grid-column: 2;
 }
-.post-share{
+
+.post-share {
     width: 120px;
     height: 100px;
     grid-column: 3;
@@ -90,7 +98,8 @@ svg {
     transform: translateY(10px);
 
 }
-.post-kebab{
+
+.post-kebab {
     width: 80px;
     height: 80px;
     justify-self: end;
@@ -98,14 +107,15 @@ svg {
     grid-column: 4;
     transform: translateY(20px);
 }
-.mapicon2{
+
+.mapicon2 {
     width: 150px;
     height: 100px;
     margin: 10px;
     transform: translateX(-20px);
 }
 
-.topbar p{
+.post-topbar p {
     font-size: 40px;
     color: white;
     margin-top: 30px;
@@ -118,7 +128,7 @@ svg {
     /* filter: drop-shadow(0 0 rem black); */
 }
 
-.post-picture{
+.post-picture {
     grid-row: 1 / span 8;
     grid-column: 1 / span 4;
     z-index: 0;
@@ -128,9 +138,10 @@ svg {
 
 
 }
+
 .navbar.bg-body-tertiary {
-    position: sticky;  
-    top: 0;            
-    z-index: 1000;     
-    background: linear-gradient(rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: linear-gradient(rgba(202, 152, 251, 1) 35%, rgba(202, 152, 251, 1) 100%);
 }

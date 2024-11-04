@@ -55,7 +55,7 @@ body {
     grid-area: location;
 }
 
-#description {
+#input-description {
     grid-area: description;
 }
 

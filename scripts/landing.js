@@ -4,15 +4,15 @@ async function displayCardsDynamically(collection) {
 
     const allPosts = await db.collection(collection).get();
 
-    allPosts.forEach(async doc => { 
+    allPosts.forEach(async doc => {
         const title = doc.data().title;
         const location = doc.data().street.concat(", " + doc.data().city);
         const time = doc.data().time;
-        
+
         // Clone the template
         let newpost = cardTemplate.content.cloneNode(true);
         console.log("Cloned template content:", newpost); // Log the cloned content
-        
+
         // Function to fetch image URL
         async function getImageURL() {
             try {
