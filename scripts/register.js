@@ -6,12 +6,12 @@
  import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
  // Your web app's Firebase configuration
  const firebaseConfig = {
-   apiKey: "AIzaSyBKkme1ckTH3O7NOg-xyubCnb6CSOjH3SY",
-   authDomain: "bby31-test.firebaseapp.com",
-   projectId: "bby31-test",
-   storageBucket: "bby31-test.firebasestorage.app",
-   messagingSenderId: "1058954539360",
-   appId: "1:1058954539360:web:e0390223983e54bb8b6e05"
+    apiKey: "AIzaSyBPz_uJEJn17ld3tEuoGTNgouSrmzjsccg",
+    authDomain: "comp-1800-bby-31.firebaseapp.com",
+    projectId: "comp-1800-bby-31",
+    storageBucket: "comp-1800-bby-31.firebasestorage.app",
+    messagingSenderId: "698245109532",
+    appId: "1:698245109532:web:38908fdd53d396a91f4cd9"
  };
 
  // Initialize Firebase
