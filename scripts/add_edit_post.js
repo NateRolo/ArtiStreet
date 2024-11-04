@@ -49,13 +49,13 @@ document.getElementById("save_button").addEventListener("click", async () => {
         const postRef = db.collection("posts").doc(); // Generate a unique ID for the post
 
         await postRef.set({
-            TITLE: title,
-            CITY: location,
-            STREET: location,
+            title: title,
+            city: location,
+            street: location,
             // "USER.USERNAME": username,
             // "USER.HANDLE": handle,
-            IMAGE_URL: imageUrl,
-            TIME: firebase.firestore.FieldValue.serverTimestamp() // Current server timestamp
+            image_URL: imageUrl,
+            time: firebase.firestore.FieldValue.serverTimestamp() // Current server timestamp
         });
 
         if (document.getElementById("input-description").includes("")) {
