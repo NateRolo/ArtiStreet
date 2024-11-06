@@ -58,11 +58,11 @@ document.getElementById("save_button").addEventListener("click", async () => {
             time: firebase.firestore.FieldValue.serverTimestamp() // Current server timestamp
         });
 
-        if (document.getElementById("input-description").includes("")) {
-            const descriptionInput = document.getElementById("input-description");
-            const description = descriptionInput.value.trim();
-            postRef.set({ DESCRIPTION: description });
-        }
+        // if (document.getElementById("input-description").includes("")) {
+        //     const descriptionInput = document.getElementById("input-description");
+        //     const description = descriptionInput.value.trim();
+        //     postRef.set({ DESCRIPTION: description });
+        
         // Redirect to the landing page after posting
         window.location.href = "./Landing.html";
     } catch (error) {
