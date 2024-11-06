@@ -22,6 +22,8 @@ document.getElementById("save_button").addEventListener("click", async () => {
     }
 
     try {
+        /* User authentication commented out */
+
         // // Get the current authenticated user
         // const user = firebase.auth().currentUser;
         // if (!user) {
@@ -40,6 +42,7 @@ document.getElementById("save_button").addEventListener("click", async () => {
         // const username = userData.USERNAME;
         // const handle = userData.HANDLE;
 
+        /* End of user authentication */
 
         // Split location into street and city
         const [street, city] = location.split(",").map(part => part.trim());
