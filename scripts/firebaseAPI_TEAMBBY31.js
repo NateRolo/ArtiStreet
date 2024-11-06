@@ -1,7 +1,7 @@
 //----------------------------------------
 //  Your web app's Firebase configuration
 //----------------------------------------
-var firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyBPz_uJEJn17ld3tEuoGTNgouSrmzjsccg",
     authDomain: "comp-1800-bby-31.firebaseapp.com",
     projectId: "comp-1800-bby-31",
