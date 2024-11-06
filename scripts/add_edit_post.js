@@ -42,12 +42,23 @@ document.getElementById("save_button").addEventListener("click", async () => {
 
 
         // Split location into street and city
-         const [street, city] = location.split(",").map(part => part.trim());
+        const [street, city] = location.split(",").map(part => part.trim());
 
         // Upload the image to Firebase Storage
         const storageRef = storage.ref(`images/${file.name}`);
         await storageRef.put(file);
         const imageUrl = await storageRef.getDownloadURL();
+
+        const locationPattern = /^[^,]+,\s*[^,]+$/;
+
+        // Validate location format
+        if (!locationPattern.test(location)) {
+            alert("Please enter the location in 'street, city' format.");
+            locationInput.style.border = "2px solid red";
+            return; // Exit the function if location format is incorrect
+        } else {
+            locationInput.style.border = ""; // Reset border if format is correct
+        }
 
         // Create a new post in Firestore
         const postRef = db.collection("posts").doc(); // Generate a unique ID for the post
@@ -66,7 +77,7 @@ document.getElementById("save_button").addEventListener("click", async () => {
         //     const descriptionInput = document.getElementById("input-description");
         //     const description = descriptionInput.value.trim();
         //     postRef.set({ DESCRIPTION: description });
-        
+
         // Redirect to the landing page after posting
         window.location.href = "./Landing.html";
     } catch (error) {
