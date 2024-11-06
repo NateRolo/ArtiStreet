@@ -1,8 +1,31 @@
+// Convert time to format "x time ago".
+function timeAgo(date) {
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
 
+    let interval = Math.floor(seconds / 31536000);
+    if (interval >= 1) return `${interval} year${interval > 1 ? 's' : ''} ago`;
+
+    interval = Math.floor(seconds / 2592000);
+    if (interval >= 1) return `${interval} month${interval > 1 ? 's' : ''} ago`;
+
+    interval = Math.floor(seconds / 86400);
+    if (interval >= 1) return `${interval} day${interval > 1 ? 's' : ''} ago`;
+
+    interval = Math.floor(seconds / 3600);
+    if (interval >= 1) return `${interval} hour${interval > 1 ? 's' : ''} ago`;
+
+    interval = Math.floor(seconds / 60);
+    if (interval >= 1) return `${interval} minute${interval > 1 ? 's' : ''} ago`;
+
+    return "just now";
+}
+
+// Display cards by pulling from databases.
 async function displayCardsDynamically(collection) {
     let cardTemplate = document.getElementById("post-landing-template");
 
-    const allPosts = await db.collection(collection).get();
+    const allPosts = await db.collection(collection).orderBy("time", "desc").get();
 
     allPosts.forEach(async doc => {
         const title = doc.data().title;
@@ -12,30 +35,29 @@ async function displayCardsDynamically(collection) {
 
         // Clone the template
         let newpost = cardTemplate.content.cloneNode(true);
-        console.log("Cloned template content:", newpost); // Log the cloned content
-        
-        // Attempt to get .post-picture element
-        const postPictureElement = newpost.querySelector('.post-picture');
-        console.log("postPictureElement found:", postPictureElement); // Log check for the element
 
-        // Assign imageURL to .post-picture element
+        // Set the image
+        const postPictureElement = newpost.querySelector('.post-picture');
         if (postPictureElement && imgURL) {
             postPictureElement.src = imgURL;
-        } else {
-            console.warn("Warning: .post-picture element is missing or image URL failed to load.");
         }
 
         // Update other fields
         newpost.querySelector('.post-location').innerHTML = location;
         newpost.querySelector('.post-title').innerHTML = title;
-        newpost.querySelector('.post-time').innerHTML = time;
+
+        // Convert Firestore timestamp to JS Date object
+        if (time) {
+            const timeAgoText = timeAgo(time.toDate());
+            newpost.querySelector('.post-time').innerHTML = timeAgoText;
+        } else {
+            newpost.querySelector('.post-time').innerHTML = "Unknown time";
+        }
 
         // Append to the collection container
         document.getElementById(collection + "-go-here").appendChild(newpost);
-        console.log("New post appended"); // Log successful append
     });
 }
 
 // Call the function
 displayCardsDynamically("posts");
-
