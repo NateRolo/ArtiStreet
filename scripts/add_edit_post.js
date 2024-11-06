@@ -1,5 +1,4 @@
 document.getElementById("save_button").addEventListener("click", async () => {
-    // Get values from user input.
     const titleInput = document.getElementById("input-title");
     const locationInput = document.getElementById("input-location");
     const img = document.getElementById("img-upload");
@@ -9,52 +8,46 @@ document.getElementById("save_button").addEventListener("click", async () => {
     const location = locationInput.value.trim();
     const file = img.files[0];
 
-    // Check if required fields are filled
+    // input validation
     if (!title || !location || !file) {
         alert("Please fill in all required fields.");
 
-        // Apply red border if fields are missing
+       
         titleInput.style.border = title ? "" : "2px solid red";
         locationInput.style.border = location ? "" : "2px solid red";
         fileLabel.style.border = file ? "" : "2px solid red";
 
-        return; // Exit the function if validation fails
+        return; 
     }
 
     try {
-        /* User authentication commented out */
+        const user = firebase.auth().currentUser;
+        if (!user) {
+            alert("You need to be logged in to post.");
+            return;
+        }
+        const userDoc = await db.collection("users").doc(user.uid).get();
+        if (!userDoc.exists) {
+            alert("User profile not found.");
+            return;
+        }
 
-        // // Get the current authenticated user
-        // const user = firebase.auth().currentUser;
-        // if (!user) {
-        //     alert("You need to be logged in to post.");
-        //     return;
-        // }
-
-        // // Retrieve the user data from Firestore
-        // const userDoc = await db.collection("users").doc(user.uid).get();
-        // if (!userDoc.exists) {
-        //     alert("User profile not found.");
-        //     return;
-        // }
-
-        // const userData = userDoc.data();
-        // const username = userData.USERNAME;
-        // const handle = userData.HANDLE;
-
-        /* End of user authentication */
-
-        // Split location into street and city
+        const userData = userDoc.data();
+        const username = userData.username; 
+        const handle = userData.userHandle;
+       
+        // splits location into city and street
         const [street, city] = location.split(",").map(part => part.trim());
 
-        // Upload the image to Firebase Storage
+        // Uploads image to firebase storage
         const storageRef = storage.ref(`images/${file.name}`);
         await storageRef.put(file);
         const imageUrl = await storageRef.getDownloadURL();
-
+        
+        // users must input location according to format "street, city"
         const locationPattern = /^[^,]+,\s*[^,]+$/;
 
-        // Validate location format
+        
         if (!locationPattern.test(location)) {
             alert("Please enter the location in 'street, city' format.");
             locationInput.style.border = "2px solid red";
@@ -63,16 +56,20 @@ document.getElementById("save_button").addEventListener("click", async () => {
             locationInput.style.border = ""; // Reset border if format is correct
         }
 
-        // Create a new post in Firestore
+
+        
         const postRef = db.collection("posts").doc(); // Generate a unique ID for the post
 
         await postRef.set({
             title: title,
             city: city,
             street: street,
-            // "USER.USERNAME": username,
-            // "USER.HANDLE": handle,
             image_URL: imageUrl,
+            user: {
+                uid: user.uid,
+                username: username,
+                handle: handle
+            },
             time: firebase.firestore.FieldValue.serverTimestamp() // Current server timestamp
         });
 
