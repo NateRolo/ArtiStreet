@@ -8,33 +8,19 @@ async function displayCardsDynamically(collection) {
         const title = doc.data().title;
         const location = doc.data().street.concat(", " + doc.data().city);
         const time = doc.data().time;
+        const imgURL = doc.data().image_URL;
 
         // Clone the template
         let newpost = cardTemplate.content.cloneNode(true);
         console.log("Cloned template content:", newpost); // Log the cloned content
-
-        // Function to fetch image URL
-        async function getImageURL() {
-            try {
-                const storageRef = storage.refFromURL('gs://comp-1800-bby-31.appspot.com/images/ippoVsSendAction.webp');
-                const url = await storageRef.getDownloadURL();
-                return url;
-            } catch (error) {
-                console.error("Error fetching download URL:", error);
-                return null;
-            }
-        }
-
-        // Fetch the image URL
-        const imageUrl = await getImageURL();
-
+        
         // Attempt to get .post-picture element
         const postPictureElement = newpost.querySelector('.post-picture');
         console.log("postPictureElement found:", postPictureElement); // Log check for the element
 
         // Assign imageURL to .post-picture element
-        if (postPictureElement && imageUrl) {
-            postPictureElement.src = imageUrl;
+        if (postPictureElement && imgURL) {
+            postPictureElement.src = imgURL;
         } else {
             console.warn("Warning: .post-picture element is missing or image URL failed to load.");
         }
