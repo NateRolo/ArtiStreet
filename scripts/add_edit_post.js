@@ -1,4 +1,6 @@
+
 document.getElementById("save_button").addEventListener("click", async () => {
+    // get input values 
     const titleInput = document.getElementById("input-title");
     const locationInput = document.getElementById("input-location");
     const img = document.getElementById("img-upload");
@@ -19,7 +21,7 @@ document.getElementById("save_button").addEventListener("click", async () => {
 
         return; 
     }
-
+    // user needs to be logged in
     try {
         const user = firebase.auth().currentUser;
         if (!user) {
