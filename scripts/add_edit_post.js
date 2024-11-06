@@ -22,23 +22,23 @@ document.getElementById("save_button").addEventListener("click", async () => {
     }
 
     try {
-        // // Get the current authenticated user
-        // const user = firebase.auth().currentUser;
-        // if (!user) {
-        //     alert("You need to be logged in to post.");
-        //     return;
-        // }
+        // Get the current authenticated user
+        const user = firebase.auth().currentUser;
+        if (!user) {
+            alert("You need to be logged in to post.");
+            return;
+        }
 
-        // // Retrieve the user data from Firestore
-        // const userDoc = await db.collection("users").doc(user.uid).get();
-        // if (!userDoc.exists) {
-        //     alert("User profile not found.");
-        //     return;
-        // }
+        // Retrieve the user data from Firestore
+        const userDoc = await db.collection("users").doc(user.uid).get();
+        if (!userDoc.exists) {
+            alert("User profile not found.");
+            return;
+        }
 
-        // const userData = userDoc.data();
-        // const username = userData.USERNAME;
-        // const handle = userData.HANDLE;
+        const userData = userDoc.data();
+        const username = userData.USERNAME;
+        const handle = userData.HANDLE;
 
         // Upload the image to Firebase Storage
         const storageRef = storage.ref(`images/${file.name}`);
