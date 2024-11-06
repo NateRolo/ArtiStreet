@@ -22,23 +22,23 @@ document.getElementById("save_button").addEventListener("click", async () => {
     }
 
     try {
-        // // Get the current authenticated user
-        // const user = firebase.auth().currentUser;
-        // if (!user) {
-        //     alert("You need to be logged in to post.");
-        //     return;
-        // }
+        // Get the current authenticated user
+        const user = firebase.auth().currentUser;
+        if (!user) {
+            alert("You need to be logged in to post.");
+            return;
+        }
 
-        // // Retrieve the user data from Firestore
-        // const userDoc = await db.collection("users").doc(user.uid).get();
-        // if (!userDoc.exists) {
-        //     alert("User profile not found.");
-        //     return;
-        // }
+        // Retrieve the user data from Firestore
+        const userDoc = await db.collection("users").doc(user.uid).get();
+        if (!userDoc.exists) {
+            alert("User profile not found.");
+            return;
+        }
 
-        // const userData = userDoc.data();
-        // const username = userData.USERNAME;
-        // const handle = userData.HANDLE;
+        const userData = userDoc.data();
+        const username = userData.USERNAME;
+        const handle = userData.HANDLE;
 
         // Upload the image to Firebase Storage
         const storageRef = storage.ref(`images/${file.name}`);
@@ -58,11 +58,11 @@ document.getElementById("save_button").addEventListener("click", async () => {
             time: firebase.firestore.FieldValue.serverTimestamp() // Current server timestamp
         });
 
-        if (document.getElementById("input-description").includes("")) {
-            const descriptionInput = document.getElementById("input-description");
-            const description = descriptionInput.value.trim();
-            postRef.set({ DESCRIPTION: description });
-        }
+        // if (document.getElementById("input-description").includes("")) {
+        //     const descriptionInput = document.getElementById("input-description");
+        //     const description = descriptionInput.value.trim();
+        //     postRef.set({ DESCRIPTION: description });
+        
         // Redirect to the landing page after posting
         window.location.href = "./Landing.html";
     } catch (error) {
