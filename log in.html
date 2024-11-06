@@ -14,10 +14,6 @@
     <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
     <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
-    <script type="module" src="./scripts/register.js" defer></script>
   </head>
 
   <body id="content">
@@ -39,7 +35,8 @@
             <h1 class="display-4 fw-bold lh-1 mb-3">Join ArtiStreet <br> The Canvas of the City!</h1>
             <p class="col-lg-10 fs-4">Whether you create or admire, <b>ArtiStreet</b> is your hub for all things street art. <span id="upload">Upload</span> your work, <span id="discover">discover</span> hidden gems, and let the world see the streets through <b>your</b> lens.</p>
           </div>
-          <div class="col-md-10 mx-auto col-lg-5" id="firebase-auth-container">
+
+          <div class="col-md-10 mx-auto col-lg-5" id="firebaseui-auth-container">
             <form class="p-4 p-md-5 border rounded-3 bg-light">
               <div class="form-floating mb-3">
                 <input type="email" class="form-control" id="email" placeholder="name@example.com">
@@ -62,9 +59,9 @@
         </div>
       </div>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
       <script src="./scripts/firebaseAPI_TEAMBBY31.js"></script>
-      <script src="./scripts/authentication.js"></script>
+      <script src="./scripts/register.js"></script>
+      
 
   </body>
 </html>
