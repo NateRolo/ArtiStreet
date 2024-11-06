@@ -40,6 +40,10 @@ document.getElementById("save_button").addEventListener("click", async () => {
         // const username = userData.USERNAME;
         // const handle = userData.HANDLE;
 
+
+        // Split location into street and city
+         const [street, city] = location.split(",").map(part => part.trim());
+
         // Upload the image to Firebase Storage
         const storageRef = storage.ref(`images/${file.name}`);
         await storageRef.put(file);
@@ -50,8 +54,8 @@ document.getElementById("save_button").addEventListener("click", async () => {
 
         await postRef.set({
             title: title,
-            city: location,
-            street: location,
+            city: city,
+            street: street,
             // "USER.USERNAME": username,
             // "USER.HANDLE": handle,
             image_URL: imageUrl,
