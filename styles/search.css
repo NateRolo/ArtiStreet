@@ -1,0 +1,17 @@
+
+/* Center the search bar vertically and horizontally */
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; /* Adjust the height as needed */
+}
+
+.form-control {
+    width: 800px; /* Set the desired width */
+    height: 100px; /* Increase the height */
+}
+
+.btn {
+    height: 100px; /* Match the button height to input */
+}
