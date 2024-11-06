@@ -1,4 +1,4 @@
-// Convert time to format "x time ago".
+// Convert time to format "x time ago"
 function timeAgo(date) {
     const now = new Date();
     const seconds = Math.floor((now - date) / 1000);
@@ -21,8 +21,8 @@ function timeAgo(date) {
     return "just now";
 }
 
-// Display cards by pulling from databases.
-async function displayCardsDynamically(collection) {
+// Display posts 
+async function displayPostsDynamically(collection) {
     let cardTemplate = document.getElementById("post-landing-template");
 
     const allPosts = await db.collection(collection).orderBy("time", "desc").get();
@@ -60,4 +60,4 @@ async function displayCardsDynamically(collection) {
 }
 
 // Call the function
-displayCardsDynamically("posts");
+displayPostsDynamically("posts");
