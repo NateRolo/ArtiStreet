@@ -24,26 +24,24 @@
 
     <script id="MainScript">
       var ImgName, ImgURL;
-      var file = [];
+      var files = []; // Declare files as an array
       var reader;
 
       var firebaseConfig = {
         apiKey: "AIzaSyBPz_uJEJn17ld3tEuoGTNgouSrmzjsccg",
         authDomain: "comp-1800-bby-31.firebaseapp.com",
         projectId: "comp-1800-bby-31",
-        storageBucket: "comp-1800-bby-31.firebasestorage.app",
+        storageBucket: "comp-1800-bby-31.appspot.com",
         messagingSenderId: "698245109532",
         appId: "1:698245109532:web:38908fdd53d396a91f4cd9",
       };
 
       //--------------------------------------------
       // initialize the Firebase app
-      // initialize Firestore database if using it
       //--------------------------------------------
       const app = firebase.initializeApp(firebaseConfig);
 
-      //   Selection
-
+      // Selection of image
       document.getElementById("select").onclick = function (e) {
         var input = document.createElement("input");
         input.type = "file";
@@ -59,26 +57,49 @@
         input.click();
       };
 
-      //upload 
-      document.getElementById('upload').onclick = function(){
-        ImgName = document.getElementById('namebox').value;
-        var upload = firebase.storage().ref('Images/' + ImgName + ".png").put(files[0]);
+      // Uploading image to Firebase Storage and Database
+      document.getElementById("upload").onclick = function () {
+        ImgName = document.getElementById("namebox").value;
+        var uploadTask = firebase
+          .storage()
+          .ref("Images/" + ImgName + ".png")
+          .put(files[0]);
 
-        uploadTask.on('state_changed', function(snapshot){
-
-            var progress = (snapshot.bytesTranferred / snapshot.totalBytes) * 100;
-            document.getElementById('UpProgress').innerHTML = 'Upload' + progress + '%';
-        },
-
-        function(error){
-            alert('error in saving image')
-        }
-
-        function(){
-            uploadTask.snapshot.ref.getDownloadURL()
-        }
-    )
-      }
+        // Track the upload progress
+        uploadTask.on(
+          "state_changed",
+          function (snapshot) {
+            var progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            document.getElementById("UpProgress").innerHTML =
+              "Upload " + progress.toFixed(2) + "%";
+          },
+          function (error) {
+            // Handle errors
+            alert("Error in saving image: " + error.message);
+          },
+          function () {
+            // On successful upload
+            uploadTask.snapshot.ref.getDownloadURL().then(function (url) {
+              ImgURL = url; // Get the image URL
+              // Store the image details in Firebase Realtime Database
+              firebase
+                .database()
+                .ref("Pictures/" + ImgName)
+                .set({
+                  Name: ImgName,
+                  Link: ImgURL,
+                })
+                .then(function () {
+                  alert("Image added successfully");
+                })
+                .catch(function (error) {
+                  alert("Error storing image in database: " + error.message);
+                });
+            });
+          }
+        );
+      };
     </script>
 
     <script src="./scripts/firebaseAPI_TEAMBBY31.js"></script>
