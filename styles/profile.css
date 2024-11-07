@@ -48,41 +48,8 @@ body {
     padding-top: 30px;
 }
 
-#sidebar {
-    grid-column-start: colOne ;
-    grid-column-end: colTwo;
-    grid-row-start: rowTwo;
-    grid-row-end: end;
-    background: rgb(202,152,251);
-    background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
-    background-size: 100vw;
-    height: 100vh;
-    position: sticky;
-    text-align: center;
-    width: 100%;
-}
-
 #navbar{
     background: linear-gradient(rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
-}
-#sidebar ul {
-    width: auto;
-    margin: 0;
-    padding: 0;
-}
-
-#sidebar ul > li {
-    list-style: none;
-    font-size: 20pt;
-    margin-top: 0;
-    margin-right: 0;
-    margin-bottom: 50px;
-    margin-left: 0;
-    color: white;
-}
-
-#sidebar ul > li:first-of-type {
-    margin-top: 30px;
 }
 
 #bottomNav svg {
@@ -134,7 +101,7 @@ body {
     }
 
     #profileHeader {
-        grid-column-start: colFour;
+        grid-column-start: colOne;
         grid-column-end: end;
     }
 }
