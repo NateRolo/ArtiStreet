@@ -19,7 +19,7 @@ function getUserData() {
     } else {
         console.error("No user is currently signed in.");
         alert("You need to be signed in to view this page.");
-        window.location.href = "./signin.html"; // Redirect to sign-in page
+        window.location.href = "./login.html"; // Redirect to sign-in page
     }
 }
 
