@@ -1,5 +1,5 @@
 document.getElementById('login-redirect').addEventListener("click", function() {
-   window.location.href = "login.html"; // send to login page
+   window.location.href = "/html/login.html"; // send to login page
  });
  
 document.getElementById('submit').addEventListener("click", function (event) {
@@ -32,7 +32,7 @@ document.getElementById('submit').addEventListener("click", function (event) {
     })
     .then(() => {
       // send to landing page
-      window.location.href = "Landing.html";
+      window.location.href = "/html/Landing.html";
     })
     .catch((error) => {
       const errorMessage = error.message;
