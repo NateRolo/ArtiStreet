@@ -1,6 +1,6 @@
 // send back to signup page
 document.getElementById('signup-redirect').addEventListener("click", function() {
-    window.location.href = "sign_up.html"; // Redirects to the signup page
+    window.location.href = "/html/sign_up.html"; // Redirects to the signup page
   });
   
   // login button
@@ -18,7 +18,7 @@ document.getElementById('signup-redirect').addEventListener("click", function() 
   
     auth.signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
-        window.location.href = "Landing.html";
+        window.location.href = "/html/Landing.html";
       })
       .catch((error) => {
         const errorMessage = error.message;

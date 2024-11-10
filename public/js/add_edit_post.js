@@ -81,7 +81,7 @@ document.getElementById("save_button").addEventListener("click", async () => {
         //     postRef.set({ DESCRIPTION: description });
 
         // Redirect to the landing page after posting
-        window.location.href = "./Landing.html";
+        window.location.href = "/html/Landing.html";
     } catch (error) {
         console.error("Error saving post:", error);
         alert("Failed to save the post. Please try again.");
