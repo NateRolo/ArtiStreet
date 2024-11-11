@@ -58,6 +58,7 @@ body {
 
 #text p {
     padding-top: 30px;
+    font-size: .8em;
 }
 
 #navbar{
@@ -132,8 +133,12 @@ body {
     border-radius: 50px 50px 0 0;
     overflow-y: hidden;
     display: grid;
-    grid-template-columns: 0.05fr 1fr;
-    grid-template-rows: 0.1fr 0.1fr 0.1fr 0.1fr;
+    grid-template-columns: 0.1fr 1fr;
+    grid-template-rows: minmax(5px, auto);
+    grid-template-areas:
+        ". ."
+        ". title"
+        ". location";
 }
 
 .post-bottombar {
@@ -143,60 +148,63 @@ body {
     border-radius: 0 0 50px 50px;
     z-index: 2;
     display: grid;
-    grid-template-columns: 0.1fr 1fr;
-    grid-template-rows: 0.1fr 0.1fr 0.1fr 0.1fr;
+    grid-template-columns: 12% 76% 6% 6%;
+    grid-template-rows: 1fr;
 }
 
 .profileIcon {
-    grid-row: 1 /span 2;
     grid-column: 1;
-    width: 100px;
-    height: 100px;
-    margin: 15px;
+    width: 100%;
+    grid-row: 1;
 }
 
 .post-title {
-    font-size: 40px;
+    grid-area: title;
     font-weight: bold;
-    transform: translateY(20px);
-    grid-column: 2;
+    font-size: 1.5em;
 }
 
+.post-location {
+    grid-area: location;
+    font-size: 0.5em;
+}
 .post-time {
-    font-size: 30px;
+    font-size: 1em;
     grid-column: 2;
+    grid-row: 1;
 }
-
+.post-user {
+    grid-column: 2;
+    grid-row: 1;
+}
 .post-share {
-    width: 120px;
-    height: 100px;
+    width: 1em;
+    height: 1em;
     grid-column: 3;
-    grid-row: 1 / span 2;
-    transform: translateY(10px);
-
+    vertical-align: top;
+    grid-row: 1;
 }
 
 .post-kebab {
-    width: 80px;
-    height: 80px;
-    justify-self: end;
-    grid-row: 1 / span 2;
+    width: 1em;
+    grid-row: 1;
+    vertical-align: top;
     grid-column: 4;
-    transform: translateY(20px);
+    
+    
 }
 
 .mapicon2 {
-    width: 150px;
-    height: 100px;
-    margin: 10px;
-    transform: translateX(-20px);
+    width: 1em;
+    height: 1em;;
+    margin: auto;
+    vertical-align: middle;
 }
 
 .post-topbar p {
-    font-size: 40px;
+    
     color: white;
-    margin-top: 30px;
-    transform: translateX(-30px);
+    margin: 0;
 }
 
 .post-picture {

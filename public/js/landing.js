@@ -48,6 +48,7 @@ async function displayPostsDynamically(collection, type = "all") {
         const location = doc.data().street.concat(", " + doc.data().city);
         const time = doc.data().time;
         const imgURL = doc.data().image_URL;
+        const userName = doc.data().user.username;
 
         let newpost = cardTemplate.content.cloneNode(true);
 
@@ -56,6 +57,7 @@ async function displayPostsDynamically(collection, type = "all") {
             postPictureElement.src = imgURL;
         }
 
+        newpost.querySelector('.post-user').innerHTML = userName;
         newpost.querySelector('.post-location').innerHTML = location;
         newpost.querySelector('.post-title').innerHTML = title;
 
