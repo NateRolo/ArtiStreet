@@ -21,32 +21,44 @@ function timeAgo(date) {
     return "just now";
 }
 
-// Display posts 
-async function displayPostsDynamically(collection) {
-    let cardTemplate = document.getElementById("post-landing-template");
 
-    const allPosts = await db.collection(collection).orderBy("time", "desc").get();
+async function displayPostsDynamically(collection, type = "all") {
+    let cardTemplate = document.getElementById("post-template");
 
-    allPosts.forEach(async doc => {
+    let query;
+    if (type === "user") {
+        const user = firebase.auth().currentUser;
+        if (!user) {
+            alert("You need to be logged in to view your posts.");
+            return;
+        }
+        
+        query = db.collection(collection)
+                  .where("user.uid", "==", user.uid)
+                  .orderBy("time", "desc");
+    } else {
+        query = db.collection(collection)
+                  .orderBy("time", "desc");
+    }
+
+    const posts = await query.get();
+
+    posts.forEach(doc => {
         const title = doc.data().title;
         const location = doc.data().street.concat(", " + doc.data().city);
         const time = doc.data().time;
         const imgURL = doc.data().image_URL;
 
-        // Clone the template
         let newpost = cardTemplate.content.cloneNode(true);
 
-        // Set the image
         const postPictureElement = newpost.querySelector('.post-picture');
         if (postPictureElement && imgURL) {
             postPictureElement.src = imgURL;
         }
 
-        // Update other fields
         newpost.querySelector('.post-location').innerHTML = location;
         newpost.querySelector('.post-title').innerHTML = title;
 
-        // Convert Firestore timestamp to JS Date object
         if (time) {
             const timeAgoText = timeAgo(time.toDate());
             newpost.querySelector('.post-time').innerHTML = timeAgoText;
@@ -54,10 +66,19 @@ async function displayPostsDynamically(collection) {
             newpost.querySelector('.post-time').innerHTML = "Unknown time";
         }
 
-        // Append to the collection container
         document.getElementById(collection + "-go-here").appendChild(newpost);
     });
 }
 
-// Call the function
-displayPostsDynamically("posts");
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        const pageType = window.location.pathname.includes("profile.html") ? "user" : "all";
+        displayPostsDynamically("posts", pageType);
+    } else {
+        if (window.location.pathname.includes("profile.html")) {
+            alert("Please log in to view your posts.");
+        } else {
+            displayPostsDynamically("posts", "all");
+        }
+    }
+});
