@@ -8,6 +8,7 @@ body {
     grid-template-rows: [rowOne] auto [rowTwo] auto [rowThree] auto [rowFour] auto [rowFive] auto [rowSix] auto [rowSeven] auto [rowEight] auto;
     overflow-x: hidden;
     width: 100vw;
+    
 }
 
 #nav-tab {
