@@ -14,12 +14,12 @@ document.getElementById("save_button").addEventListener("click", async () => {
     if (!title || !location || !file) {
         alert("Please fill in all required fields.");
 
-       
+
         titleInput.style.border = title ? "" : "2px solid red";
         locationInput.style.border = location ? "" : "2px solid red";
         fileLabel.style.border = file ? "" : "2px solid red";
 
-        return; 
+        return;
     }
     // user needs to be logged in
     try {
@@ -35,9 +35,9 @@ document.getElementById("save_button").addEventListener("click", async () => {
         }
 
         const userData = userDoc.data();
-        const username = userData.username; 
+        const username = userData.username;
         const handle = userData.userHandle;
-       
+
         // splits location into city and street
         const [street, city] = location.split(",").map(part => part.trim());
 
@@ -45,11 +45,11 @@ document.getElementById("save_button").addEventListener("click", async () => {
         const storageRef = storage.ref(`images/${file.name}`);
         await storageRef.put(file);
         const imageUrl = await storageRef.getDownloadURL();
-        
+
         // users must input location according to format "street, city"
         const locationPattern = /^[^,]+,\s*[^,]+$/;
 
-        
+
         if (!locationPattern.test(location)) {
             alert("Please enter the location in 'street, city' format.");
             locationInput.style.border = "2px solid red";
@@ -59,7 +59,7 @@ document.getElementById("save_button").addEventListener("click", async () => {
         }
 
 
-        
+
         const postRef = db.collection("posts").doc(); // Generate a unique ID for the post
 
         await postRef.set({

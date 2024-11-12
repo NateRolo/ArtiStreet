@@ -17,7 +17,7 @@ svg {
 }
 
 #content {
-    background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url('/img/background1.jpeg');
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/img/background1.jpeg');
     background-size: 100% auto;
 }
 
@@ -46,8 +46,8 @@ svg {
 }
 
 #navbar {
-    background: rgb(202,152,251);
-    background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
+    background: rgb(202, 152, 251);
+    background: linear-gradient(90deg, rgba(0, 212, 255, 1) 0%, rgba(202, 152, 251, 1) 35%, rgba(202, 152, 251, 1) 100%);
     box-shadow: 0 30px 50px black;
 }
 
@@ -68,4 +68,3 @@ svg {
         display: none;
     }
 }
-

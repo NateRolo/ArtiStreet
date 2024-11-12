@@ -32,13 +32,13 @@ async function displayPostsDynamically(collection, type = "all") {
             alert("You need to be logged in to view your posts.");
             return;
         }
-        
+
         query = db.collection(collection)
-                  .where("user.uid", "==", user.uid)
-                  .orderBy("time", "desc");
+            .where("user.uid", "==", user.uid)
+            .orderBy("time", "desc");
     } else {
         query = db.collection(collection)
-                  .orderBy("time", "desc");
+            .orderBy("time", "desc");
     }
 
     const posts = await query.get();

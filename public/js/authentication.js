@@ -1,7 +1,7 @@
-document.getElementById('login-redirect').addEventListener("click", function() {
-   window.location.href = "/html/login.html"; // send to login page
- });
- 
+document.getElementById('login-redirect').addEventListener("click", function () {
+  window.location.href = "/html/login.html"; // send to login page
+});
+
 document.getElementById('submit').addEventListener("click", function (event) {
   event.preventDefault();
 
@@ -22,7 +22,7 @@ document.getElementById('submit').addEventListener("click", function (event) {
     .then((userCredential) => {
       const user = userCredential.user;
 
-      
+
       return db.collection("users").doc(user.uid).set({
         userID: user.uid,
         email: user.email,

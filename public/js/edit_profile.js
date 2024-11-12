@@ -35,13 +35,13 @@ document.getElementById('editProfileForm').addEventListener('submit', function (
             username: username,
             bio: bio
         })
-        .then(function() {
-            alert('Profile updated successfully!');
-        })
-        .catch(function(error) {
-            console.error('Error updating profile: ', error);
-            alert('Failed to update profile. Please try again.');
-        });
+            .then(function () {
+                alert('Profile updated successfully!');
+            })
+            .catch(function (error) {
+                console.error('Error updating profile: ', error);
+                alert('Failed to update profile. Please try again.');
+            });
     }
 });
 
