@@ -67,25 +67,24 @@ displayUserInfo();
 
 function displayPictureInfo() {
     let params = new URL(window.location.href);
-    let ID = params.searchParams.get("docID"); // get value for key "docID"
+    let ID = params.searchParams.get("docID"); 
     console.log("Post ID:", ID);
 
-    // Double-check the collection name, it should be "posts" based on your setup
     db.collection("posts")
         .doc(ID)
         .get()
         .then((doc) => {
             if (doc.exists) {
                 let thisPost = doc.data();
-                let postCode = thisPost.image_URL; // assuming 'code' is the field storing image names
+                let postCode = thisPost.image_URL; // just needed to add the correct thing
                 let postName = thisPost.title;
 
-                // Populate the title and image
+               
                 document.querySelector(".post-title").innerHTML = postName;
                 
-                // Set the post image source based on the post code
                 let imgElement = document.querySelector(".post-picture");
-                imgElement.src = "../images/" + postCode + ".jpg";
+                imgElement.src = postCode;  
+                console.log("Image URL:", postCode);  
             } else {
                 console.log("No such document!");
             }
@@ -95,5 +94,4 @@ function displayPictureInfo() {
         });
 }
 
-// Call the function to load post info on page load
 displayPictureInfo();
