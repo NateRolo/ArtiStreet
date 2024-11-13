@@ -127,3 +127,70 @@ function saveLike(postID) {
         });
 }
 
+async function displayPostsDynamically(collection, type = "all") {
+    let cardTemplate = document.getElementById("post-template");
+
+    let query;
+    if (type === "user") {
+        const user = firebase.auth().currentUser;
+        if (!user) {
+            alert("You need to be logged in to view your posts.");
+            return;
+        }
+
+        query = db.collection(collection)
+            .where("user.uid", "==", user.uid)
+            .orderBy("time", "desc");
+    } else {
+        query = db.collection(collection)
+            .orderBy("time", "desc");
+    }
+
+    const posts = await query.get();
+
+    posts.forEach(doc => {
+        const title = doc.data().title;
+        const location = doc.data().street.concat(", " + doc.data().city);
+        const time = doc.data().time;
+        const imgURL = doc.data().image_URL;
+        const userName = doc.data().user.username;
+        const docID = doc.id;
+
+        let newpost = cardTemplate.content.cloneNode(true);
+
+        const postPictureElement = newpost.querySelector('.post-picture');
+        if (postPictureElement && imgURL) {
+            postPictureElement.src = imgURL;
+        }
+
+        newpost.querySelector('.post-user').innerHTML = userName;
+        newpost.querySelector('.post-location').innerHTML = location;
+        newpost.querySelector('.post-title').innerHTML = title;
+        newpost.querySelector('.post-like').id = 'save-' + docID;
+        newpost.querySelector('.post-like').onclick = () => saveLike(docID);
+
+        currentUser = db.collection('users').doc(firebase.auth().currentUser.uid);
+
+        currentUser.get().then(userDoc => {
+            var likes = userDoc.data().likes;
+            if (likes.includes(docID)) {
+                document.getElementById('save-' + docID).src = `../img/heart(1).png`;
+            }
+        });
+
+        // Add time display
+        if (time) {
+            const timeAgoText = timeAgo(time.toDate());
+            newpost.querySelector('.post-time').innerHTML = timeAgoText;
+        } else {
+            newpost.querySelector('.post-time').innerHTML = "Unknown time";
+        }
+
+        // Add click event to the entire post card to redirect to content_view.html
+        newpost.querySelector('.post-card').onclick = () => {
+            window.location.href = `content_view.html?postId=${docID}`;
+        };
+
+        document.getElementById(collection + "-go-here").appendChild(newpost);
+    });
+}
