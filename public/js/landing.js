@@ -161,6 +161,10 @@ async function displayPostsDynamically(collection, type = "all") {
         const postPictureElement = newpost.querySelector('.post-picture');
         if (postPictureElement && imgURL) {
             postPictureElement.src = imgURL;
+            // Add click event to the image only to redirect to content_view.html
+            postPictureElement.onclick = () => {
+                window.location.href = `content_view.html?postId=${docID}`;
+            };
         }
 
         newpost.querySelector('.post-user').innerHTML = userName;
@@ -185,11 +189,6 @@ async function displayPostsDynamically(collection, type = "all") {
         } else {
             newpost.querySelector('.post-time').innerHTML = "Unknown time";
         }
-
-        // Add click event to the entire post card to redirect to content_view.html
-        newpost.querySelector('.post-card').onclick = () => {
-            window.location.href = `content_view.html?postId=${docID}`;
-        };
 
         document.getElementById(collection + "-go-here").appendChild(newpost);
     });
