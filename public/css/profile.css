@@ -185,10 +185,10 @@ body {
     margin-top: 1%;
 }
 
-.post-share {
-    width: 200%;
+.post-like {
+    width: 100%;
     grid-column: 3;
-    vertical-align: top;
+    vertical-align: middle;
     grid-row: 1;
 }
 
