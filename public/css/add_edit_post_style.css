@@ -14,7 +14,7 @@ body {
 
 
 #navbar-mobile {
-    background: linear-gradient(rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
+    background: linear-gradient(rgba(202, 152, 251, 1) 35%, rgba(202, 152, 251, 1) 100%);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -37,7 +37,7 @@ body {
     padding-top: 20px;
     width: 90vw;
     margin: auto;
-    grid-template-areas: 
+    grid-template-areas:
         "image image title title"
         "image image location location"
         "description description description description";
@@ -66,18 +66,19 @@ body {
     margin: auto;
 }
 
-.button-container > ul {
+.button-container>ul {
     display: table-row;
 }
 
-ul > li {
+ul>li {
     display: table-cell;
-    
+
 }
 
-#save_button, #cancel_button {
+#save_button,
+#cancel_button {
     width: 100px;
-    
+
 }
 
 input[type="file"] {
@@ -91,15 +92,16 @@ input[type="file"] {
     height: 100%;
     text-align: center;
     border: 1px solid black;
-    
+
 }
+
 /* Desktop navbar styling. Copy and paste into other css templates */
-#search-button {    
+#search-button {
     background-color: #7e09f0;
     border: solid 2px #7e09f0;
     transition: 0.2s;
     color: white;
-    
+
 }
 
 #search-button:hover {
@@ -122,11 +124,11 @@ input[type="file"] {
 }
 
 #navbar-desktop {
-    background: rgb(202,152,251);
-    background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
+    background: rgb(202, 152, 251);
+    background: linear-gradient(90deg, rgba(0, 212, 255, 1) 0%, rgba(202, 152, 251, 1) 35%, rgba(202, 152, 251, 1) 100%);
 }
 
-@media screen and (max-width: 1200px){
+@media screen and (max-width: 1200px) {
     #navbar-desktop {
         display: none;
     }
@@ -136,15 +138,15 @@ input[type="file"] {
     }
 }
 
-@media screen and (min-width: 1200px){
+@media screen and (min-width: 1200px) {
     #navbar-mobile {
         display: none;
     }
 
-    #bottom-nav-mobile{
+    #bottom-nav-mobile {
         display: none;
     }
-    
+
 }
 
 /* Desktop navbar styling end */

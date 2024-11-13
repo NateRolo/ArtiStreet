@@ -4,6 +4,7 @@ body {
     overflow-x: hidden;
     grid-template-rows: auto 1fr;
     min-height: 100vh;
+    margin-bottom: 300px;
 }
 
 .mapPointer {
@@ -90,12 +91,13 @@ svg {
     grid-column: 2;
 }
 
-.post-share {
+.post-like {
     width: 120px;
     height: 100px;
     grid-column: 3;
     grid-row: 1 / span 2;
     transform: translateY(10px);
+    cursor: pointer;
 }
 
 .post-kebab {

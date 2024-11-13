@@ -8,6 +8,7 @@ body {
     grid-template-rows: [rowOne] auto [rowTwo] auto [rowThree] auto [rowFour] auto [rowFive] auto [rowSix] auto [rowSeven] auto [rowEight] auto;
     overflow-x: hidden;
     width: 100vw;
+
 }
 
 #nav-tab {
@@ -16,7 +17,8 @@ body {
 
 }
 
-#nav-home-tab, #nav-profile-tab { 
+#nav-home-tab,
+#nav-profile-tab {
     width: 50%;
 }
 
@@ -52,7 +54,7 @@ body {
     width: 50%;
 }
 
-#text > * {
+#text>* {
     margin: 0;
 }
 
@@ -61,8 +63,8 @@ body {
     font-size: .8em;
 }
 
-#navbar{
-    background: linear-gradient(rgba(202,152,251,1) 35%, rgba(202,152,251,1) 100%);
+#navbar {
+    background: linear-gradient(rgba(202, 152, 251, 1) 35%, rgba(202, 152, 251, 1) 100%);
 }
 
 #bottomNav svg {
@@ -113,10 +115,10 @@ body {
 
 .post-card {
     border-radius: 50px;
-    width: 100%;
-    grid-column: 2;
+    width: 60vw;
+    grid-column-start: colTwo;
+    grid-column-end: colSix;
     justify-self: center;
-    margin: 0 auto;
     margin-top: 50px;
     display: grid;
     grid-template-rows: repeat(10, 0.1fr);
@@ -150,6 +152,7 @@ body {
     display: grid;
     grid-template-columns: 12% 76% 6% 6%;
     grid-template-rows: 1fr;
+    padding: 0 10px 0 10px;
 }
 
 .profileIcon {
@@ -168,41 +171,46 @@ body {
     grid-area: location;
     font-size: 0.5em;
 }
+
 .post-time {
     font-size: 1em;
     grid-column: 2;
     grid-row: 1;
+    margin-top: 5%;
 }
+
 .post-user {
     grid-column: 2;
     grid-row: 1;
+    margin-top: 1%;
 }
-.post-share {
-    width: 1em;
-    height: 1em;
+
+.post-like {
+    width: 100%;
     grid-column: 3;
-    vertical-align: top;
+    vertical-align: middle;
     grid-row: 1;
 }
 
 .post-kebab {
-    width: 1em;
+    width: 120%;
     grid-row: 1;
     vertical-align: top;
     grid-column: 4;
-    
-    
+
+
 }
 
 .mapicon2 {
     width: 1em;
-    height: 1em;;
+    height: 1em;
+    ;
     margin: auto;
     vertical-align: middle;
 }
 
 .post-topbar p {
-    
+
     color: white;
     margin: 0;
 }
@@ -254,7 +262,7 @@ body {
         grid-template-columns: 10% 80% 10%;
 
     }
-    
+
 }
 
 
