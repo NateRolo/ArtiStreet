@@ -16,9 +16,9 @@ function displayPictureInfo() {
 
                 let postCode = thisPost.image_URL; 
                 let postName = thisPost.title;
-                let user = thisPost.user; // Access the user map from the post document
-                let userName = user.username; // Access username from the user map
-                let userHandle = user.handle; // Access handle from the user map
+                let user = thisPost.user; 
+                let userName = user.username; 
+                let userHandle = user.handle; 
                 let postCity = thisPost.city; 
                 let postStreet = thisPost.street; 
                 let postTime = thisPost.time; 
