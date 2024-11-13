@@ -1,5 +1,3 @@
-
-
 async function displayUserInfo() {
     firebase.auth().onAuthStateChanged(user => {
         if (!user) {
@@ -11,6 +9,11 @@ async function displayUserInfo() {
         let currentUser = db.collection("users").doc(user.uid);
 
         currentUser.get().then(userDoc => {
+            if (!userDoc.exists) {
+                console.error("User document does not exist.");
+                return;
+            }
+
             let userName = userDoc.data().username;
             let userHandle = userDoc.data().userHandle;
             let userBio = userDoc.data().userBio;
@@ -26,37 +29,48 @@ async function displayUserInfo() {
 
 displayUserInfo();
 
-function displayPostInfo() {
-    let params = new URL(window.location.href); // Get URL of the search bar
-    let ID = params.searchParams.get("docID"); // Get value for key "docID"
-    if (!ID) {
-        console.error("No post ID found in URL.");
-        return;
-    }
+
+function displayPictureInfo() {
+    let params = new URL(window.location.href);
+    let ID = params.searchParams.get("docID"); 
     console.log("Post ID:", ID);
 
-    // Fetch the post document
     db.collection("posts")
         .doc(ID)
         .get()
-        .then(doc => {
-            if (!doc.exists) {
-                console.error("Post not found");
-                return;
-            }
-            const thisPost = doc.data();
-            const PostCode = thisPost.code;
-            const PostName = thisPost.name;
-            
-            // Populate title and image
-            document.getElementById("title").innerHTML = PostName;
-            let imgEvent = document.querySelector(".post-picture");
-            imgEvent.src = "./images/" + PostCode + ".jpg";
-        }).catch(error => {
-            console.error("Error fetching post data:", error);
-        });
+        .then((doc) => {
+            if (doc.exists) {
+                let thisPost = doc.data();
+                let postCode = thisPost.image_URL; 
+                let postName = thisPost.title;
+                let postCity = thisPost.city; 
+                let postStreet = thisPost.street; 
+                let postTime = doc.data().time; 
 
+                let postLocation = `${postCity} , ${postStreet}`;
+
+                let formattedTime = postTime.toDate(); 
+
+                let formattedTimeString = formattedTime.toLocaleString(); 
+
+                // Populate the title, time, image, and location
+                document.querySelector(".post-title").innerHTML = postName;
+                document.querySelector(".post-time").innerHTML = formattedTimeString;
+                document.querySelector(".post-location").innerHTML = postLocation;  
+                
+                let imgElement = document.querySelector(".post-picture");
+                imgElement.src = postCode;  
+                console.log("Image URL:", postCode);  
+                console.log("Formatted Time:", formattedTimeString);  
+                console.log("Location:", postLocation);  
+            } else {
+                console.log("No such document!");
+            }
+        })
+        .catch((error) => {
+            console.log("Error getting document:", error);
+        });
 }
 
-displayPostInfo();
+displayPictureInfo();
 
