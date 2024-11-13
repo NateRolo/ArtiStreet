@@ -70,6 +70,7 @@ body {
 }
 
 .post-location {
+    transform: translateY(-20px);
     grid-column: 2;
     grid-row: 5;
     font-size: 0.75em;
@@ -81,6 +82,8 @@ body {
     font-size: 0.75em;
     color: gray;
 }
+
+/* Welcome Section Styling */
 
 #welcome {
     color: #c7c7c7;
@@ -97,6 +100,35 @@ body {
 #welcome p span {
     font-weight: bold;
 }
+
+/* Button Styling */
+
+.my-button {
+    transform: translateY(-30px);
+    width: 150px;
+    height: 40px;
+    grid-column: 2;
+    grid-row: 6;              
+    background-color: #699ee3;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.my-button:hover {
+    background-color: #4a74ab;
+}
+
+.my-button p {
+    font-size: 15px;
+}
+
+/* Navigation Styling */
 
 #upload {
     color: #98fb98;
@@ -141,6 +173,8 @@ body {
     background: linear-gradient(90deg, rgba(0, 212, 255, 1) 0%, rgba(202, 152, 251, 1) 35%, rgba(202, 152, 251, 1) 100%);
 }
 
+/* Responsive Media Queries */
+
 @media screen and (max-width: 1200px) {
     #navbar-desktop {
         display: none;
@@ -160,4 +194,3 @@ body {
         display: none;
     }
 }
-
