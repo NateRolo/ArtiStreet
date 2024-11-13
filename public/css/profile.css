@@ -190,6 +190,7 @@ body {
     grid-column: 3;
     vertical-align: middle;
     grid-row: 1;
+    cursor: pointer;
 }
 
 .post-kebab {
