@@ -1,19 +1,20 @@
 
 document.getElementById("save_button").addEventListener("click", async () => {
-    // get input values 
+    // Get input values 
     const titleInput = document.getElementById("input-title");
     const locationInput = document.getElementById("input-location");
     const img = document.getElementById("img-upload");
     const fileLabel = document.getElementById("img-label");
+    const descOfPost = document.getElementById("exampleFormControlTextarea1"); // Description textarea
 
     const title = titleInput.value.trim();
     const location = locationInput.value.trim();
     const file = img.files[0];
+    const description = descOfPost.value.trim(); // Get the description value
 
-    // input validation
+    // Input validation
     if (!title || !location || !file) {
         alert("Please fill in all required fields.");
-
 
         titleInput.style.border = title ? "" : "2px solid red";
         locationInput.style.border = location ? "" : "2px solid red";
@@ -21,7 +22,8 @@ document.getElementById("save_button").addEventListener("click", async () => {
 
         return;
     }
-    // user needs to be logged in
+
+    // User needs to be logged in
     try {
         const user = firebase.auth().currentUser;
         if (!user) {
@@ -38,17 +40,16 @@ document.getElementById("save_button").addEventListener("click", async () => {
         const username = userData.username;
         const handle = userData.userHandle;
 
-        // splits location into city and street
+        // Split location into city and street
         const [street, city] = location.split(",").map(part => part.trim());
 
-        // Uploads image to firebase storage
+        // Upload image to Firebase storage
         const storageRef = storage.ref(`images/${file.name}`);
         await storageRef.put(file);
         const imageUrl = await storageRef.getDownloadURL();
 
-        // users must input location according to format "street, city"
+        // Users must input location in "street, city" format
         const locationPattern = /^[^,]+,\s*[^,]+$/;
-
 
         if (!locationPattern.test(location)) {
             alert("Please enter the location in 'street, city' format.");
@@ -58,10 +59,10 @@ document.getElementById("save_button").addEventListener("click", async () => {
             locationInput.style.border = ""; // Reset border if format is correct
         }
 
-
-
+        // Create a new post document in Firestore
         const postRef = db.collection("posts").doc(); // Generate a unique ID for the post
 
+        // Set post data, including description
         await postRef.set({
             title: title,
             city: city,
@@ -72,18 +73,16 @@ document.getElementById("save_button").addEventListener("click", async () => {
                 username: username,
                 handle: handle
             },
+            description: description, // Store the description
             time: firebase.firestore.FieldValue.serverTimestamp() // Current server timestamp
         });
 
-        // if (document.getElementById("input-description").includes("")) {
-        //     const descriptionInput = document.getElementById("input-description");
-        //     const description = descriptionInput.value.trim();
-        //     postRef.set({ DESCRIPTION: description });
-
         // Redirect to the landing page after posting
         window.location.href = "/html/Landing.html";
+
     } catch (error) {
         console.error("Error saving post:", error);
         alert("Failed to save the post. Please try again.");
     }
 });
+

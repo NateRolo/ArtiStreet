@@ -1,5 +1,3 @@
-
-
 function displayPictureInfo() {
     let params = new URL(window.location.href);
     let ID = params.searchParams.get("docID"); 
@@ -16,9 +14,10 @@ function displayPictureInfo() {
 
                 let postCode = thisPost.image_URL; 
                 let postName = thisPost.title;
-                let user = thisPost.user; 
-                let userName = user.username; 
-                let userHandle = user.handle; 
+                let user = thisPost.user; // Access the user map from the post document
+                let userName = user.username; // Access username from the user map
+                let userHandle = user.handle; // Access handle from the user map
+                let descOfPost = thisPost.description || ""; // Get description from the post document
                 let postCity = thisPost.city; 
                 let postStreet = thisPost.street; 
                 let postTime = thisPost.time; 
@@ -28,8 +27,9 @@ function displayPictureInfo() {
                 let formattedTime = postTime.toDate(); 
                 let formattedTimeString = formattedTime.toLocaleString(); 
 
-                // Populate the title, time, image, and location
+                // Populate the title, description, time, image, and location
                 document.querySelector(".post-title").innerHTML = postName;
+                document.querySelector(".post-description").innerHTML = descOfPost; // Make sure description is displayed
                 document.querySelector(".post-time").innerHTML = formattedTimeString;
                 document.querySelector(".post-location").innerHTML = postLocation;
                 
@@ -59,5 +59,4 @@ displayPictureInfo();
 
 function redirectToComment() {
     window.location.href = "Comment.html";
-  }
-
+}
