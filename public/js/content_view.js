@@ -66,24 +66,34 @@ displayUserInfo();
 
 
 function displayPictureInfo() {
-    let params = new URL( window.location.href ); //get URL of search bar
-    let ID = params.searchParams.get( "docID" ); //get value for key "id"
-    console.log( ID );
+    let params = new URL(window.location.href);
+    let ID = params.searchParams.get("docID"); // get value for key "docID"
+    console.log("Post ID:", ID);
 
-    // doublecheck: is your collection called "Reviews" or "reviews"?
-    db.collection( "posts" )
-        .doc( ID )
+    // Double-check the collection name, it should be "posts" based on your setup
+    db.collection("posts")
+        .doc(ID)
         .get()
-        .then( doc => {
-            thisPost = doc.data();
-            PostCode = thisPost.code;
-            PostName = doc.data().name;
-            
-            // only populate title, and image
-            document.getElementById( "postName" ).innerHTML = PostName;
-            let imgEvent = document.querySelector( ".post-img" );
-            imgEvent.src = "../images/" + hikeCode + ".jpg";
-        } );
+        .then((doc) => {
+            if (doc.exists) {
+                let thisPost = doc.data();
+                let postCode = thisPost.image_URL; // assuming 'code' is the field storing image names
+                let postName = thisPost.title;
+
+                // Populate the title and image
+                document.querySelector(".post-title").innerHTML = postName;
+                
+                // Set the post image source based on the post code
+                let imgElement = document.querySelector(".post-picture");
+                imgElement.src = "../images/" + postCode + ".jpg";
+            } else {
+                console.log("No such document!");
+            }
+        })
+        .catch((error) => {
+            console.log("Error getting document:", error);
+        });
 }
 
-displayPictureInfo()
+// Call the function to load post info on page load
+displayPictureInfo();
