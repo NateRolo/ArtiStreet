@@ -29,41 +29,6 @@ async function displayUserInfo() {
 
 displayUserInfo();
 
-// function displayPostInfo() {
-//     let params = new URL(window.location.href); // Get URL of the search bar
-//     let postID = params.searchParams.get("docID"); // Get value for key "docID"
-//     if (!ID) {
-//         console.error("No post ID found in URL.");
-//         return;
-//     }
-//     console.log("Post ID:", ID);
-
-//     console.log(postID);
-
-//     // Fetch the post document
-//     db.collection("posts")
-//         .doc(ID)
-//         .get()
-//         .then(doc => {
-//             if (!doc.exists) {
-//                 console.error("Post not found");
-//                 return;
-//             }
-//             const thisPost = doc.data();
-//             const PostCode = thisPost.code;
-//             const PostName = thisPost.name;
-            
-//             // Populate title and image, ensuring elements are loaded first
-//             if (PostName) document.getElementById("title").innerText = PostName;
-//             let imgEvent = document.querySelector(".post-picture");
-//             if (imgEvent) imgEvent.src = "./images/" + PostCode + ".jpg";
-//         }).catch(error => {
-//             console.error("Error fetching post data:", error);
-//         });
-// }
-
-// displayPostInfo();
-
 
 function displayPictureInfo() {
     let params = new URL(window.location.href);
@@ -76,15 +41,28 @@ function displayPictureInfo() {
         .then((doc) => {
             if (doc.exists) {
                 let thisPost = doc.data();
-                let postCode = thisPost.image_URL; // just needed to add the correct thing
+                let postCode = thisPost.image_URL; 
                 let postName = thisPost.title;
+                let postCity = thisPost.city; 
+                let postStreet = thisPost.street; 
+                let postTime = doc.data().time; 
 
-               
+                let postLocation = `${postCity} , ${postStreet}`;
+
+                let formattedTime = postTime.toDate(); 
+
+                let formattedTimeString = formattedTime.toLocaleString(); 
+
+                // Populate the title, time, image, and location
                 document.querySelector(".post-title").innerHTML = postName;
+                document.querySelector(".post-time").innerHTML = formattedTimeString;
+                document.querySelector(".post-location").innerHTML = postLocation;  
                 
                 let imgElement = document.querySelector(".post-picture");
                 imgElement.src = postCode;  
                 console.log("Image URL:", postCode);  
+                console.log("Formatted Time:", formattedTimeString);  
+                console.log("Location:", postLocation);  
             } else {
                 console.log("No such document!");
             }
@@ -95,3 +73,4 @@ function displayPictureInfo() {
 }
 
 displayPictureInfo();
+
