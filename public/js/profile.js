@@ -52,7 +52,9 @@ async function displayUserInfo() {
 }
 displayUserInfo();
 
-async function displayPostsDynamically(collection, type = "user") {
+
+
+async function displayPostsDynamically(collection, filterType = "user") {
     const user = firebase.auth().currentUser;
     if (!user) {
         console.log("User not logged in.");
@@ -61,68 +63,51 @@ async function displayPostsDynamically(collection, type = "user") {
 
     const cardTemplate = document.getElementById("post-template");
     const postContainer = document.getElementById(`${collection}-go-here`);
-    postContainer.innerHTML = ""; 
+    postContainer.innerHTML = "";
 
     let query;
-    
-    if (type === "user" ) {
+    if (filterType === "user") {
         query = db.collection(collection)
-        .where("user.uid", "==", user.uid)
-        .orderBy("time", "desc");
-        
-    } else {
-        query = db.collection(collection)
-        .where("user,uid", "==", user.likes)
+            .where("user.uid", "==", user.uid)
+            .orderBy("time", "desc");
+    } else if (filterType === "liked") {
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        const likes = userDoc.data().likes || [];
+        query = db.collection(collection).where(firebase.firestore.FieldPath.documentId(), 'in', likes);
     }
-   
+
     const posts = await query.get();
-
     posts.forEach(doc => {
-        const title = doc.data().title;
-        const location = `${doc.data().street}, ${doc.data().city}`;
-        const time = doc.data().time;
-        const imgURL = doc.data().image_URL;
-        const userName = doc.data().user.username;
-        const docID = doc.id;
+        const data = doc.data();
+        let newPost = cardTemplate.content.cloneNode(true);
 
-        let newpost = cardTemplate.content.cloneNode(true);
-        const postPictureElement = newpost.querySelector('.post-picture');
-        const postTitleElement = newpost.querySelector('.post-title');
+        const postPictureElement = newPost.querySelector('.post-picture');
+        const postTitleElement = newPost.querySelector('.post-title');
 
-        if (postPictureElement && imgURL) {
-            postPictureElement.src = imgURL;
-            postPictureElement.onclick = () => {
-                window.location.href = `content_view.html?postId=${docID}`;
-            };
+        if (postPictureElement && data.image_URL) {
+            postPictureElement.src = data.image_URL;
+            postPictureElement.onclick = () => window.location.href = `content_view.html?postId=${doc.id}`;
         }
 
-        postTitleElement.innerHTML = title;
-        postTitleElement.onclick = () => {
-            window.location.href = `content_view.html?postId=${docID}`;
-        };
+        postTitleElement.innerHTML = data.title;
+        postTitleElement.onclick = () => window.location.href = `content_view.html?postId=${doc.id}`;
 
-        newpost.querySelector('.post-user').innerHTML = userName;
-        newpost.querySelector('.post-location').innerHTML = location;
-        const likeButton = newpost.querySelector('.post-like');
-        likeButton.id = 'save-' + docID;
+        newPost.querySelector('.post-user').innerHTML = data.user.username;
+        newPost.querySelector('.post-location').innerHTML = `${data.street}, ${data.city}`;
+        newPost.querySelector('.post-time').innerHTML = data.time ? timeAgo(data.time.toDate()) : "Unknown time";
 
-        
-        likeButton.onclick = () => toggleLike(docID, likeButton);
+        const likeButton = newPost.querySelector('.post-like');
+        likeButton.id = 'save-' + doc.id;
+        likeButton.onclick = () => toggleLike(doc.id, likeButton);
 
         db.collection('users').doc(user.uid).get().then(userDoc => {
             const likes = userDoc.data().likes || [];
-            if (likes.includes(docID)) {
-                likeButton.src = `../img/heart(1).png`;
+            if (likes.includes(doc.id)) {
+                likeButton.src = '../img/heart(1).png';
             }
         });
 
-        if (time) {
-            newpost.querySelector('.post-time').innerHTML = timeAgo(time.toDate());
-        } else {
-            newpost.querySelector('.post-time').innerHTML = "Unknown time";
-        }
-
-        postContainer.appendChild(newpost);
+        postContainer.appendChild(newPost);
     });
 }
 
@@ -165,3 +150,14 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
+document.getElementById("user-likes").addEventListener("click", () => {
+    displayPostsDynamically("posts", "liked");
+    document.getElementById("user-likes").classList.toggle("active");
+    document.getElementById("user-posts").classList.remove("active");
+});
+
+document.getElementById("user-posts").addEventListener("click", () => {
+    displayPostsDynamically("posts", "user");
+    document.getElementById("user-posts").classList.toggle("active");
+    document.getElementById("user-likes").classList.remove("active");
+});
