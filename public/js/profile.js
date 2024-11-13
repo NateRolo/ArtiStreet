@@ -21,6 +21,37 @@ function timeAgo(date) {
     return "just now";
 }
 
+async function displayUserInfo() {
+    firebase.auth().onAuthStateChanged(user => {
+        
+        console.log(user);
+        if (!user) {
+            console.log("You need to be signed in to see your posts.");
+        }
+        //go to the correct user document by referencing to the user uid
+        currentUser = db.collection("users").doc(user.uid);
+        //get the document for current user.
+        currentUser.get()
+            .then(userDoc => {
+                //get the data fields of the user
+                let userName = userDoc.data().username;
+                let userHandle = userDoc.data().userHandle;
+                let userBio = userDoc.data().userBio;
+                //if the data fields are not empty, then write them in to the form.
+                if (userName != null) {
+                    document.getElementById("user-name").innerHTML = userName;
+                }
+                if (userHandle != null) {
+                    document.getElementById("user-handle").innerHTML = "@" + userHandle;
+                }
+                if (userBio != null) {
+                    document.getElementById("user-bio").innerHTML = userBio;
+                }
+            })
+    })
+}
+displayUserInfo();
+
 async function displayPostsDynamically(collection, type = "user") {
     const user = firebase.auth().currentUser;
     if (!user) {
@@ -32,10 +63,18 @@ async function displayPostsDynamically(collection, type = "user") {
     const postContainer = document.getElementById(`${collection}-go-here`);
     postContainer.innerHTML = ""; 
 
-    let query = type === "user"
-        ? db.collection(collection).where("user.uid", "==", user.uid).orderBy("time", "desc")
-        : db.collection(collection).orderBy("time", "desc");
-
+    let query;
+    
+    if (type === "user" ) {
+        query = db.collection(collection)
+        .where("user.uid", "==", user.uid)
+        .orderBy("time", "desc");
+        
+    } else {
+        query = db.collection(collection)
+        .where("user,uid", "==", user.likes)
+    }
+   
     const posts = await query.get();
 
     posts.forEach(doc => {
@@ -116,7 +155,7 @@ function toggleLike(postID, likeButton) {
             }).catch(error => console.error("Error liking post:", error));
         }
     }).catch(error => console.error("Error retrieving user data:", error));
-}
+};
 
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {        

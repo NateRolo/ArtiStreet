@@ -69,7 +69,7 @@ async function displayPostsDynamically(collection, type = "all") {
                 window.location.href = `content_view.html?docID=${docID}`;
             };
         }
-// test branch 
+
         newpost.querySelector('.post-user').innerHTML = userName;
         newpost.querySelector('.post-location').innerHTML = location;
         const likeButton = newpost.querySelector('.post-like');
