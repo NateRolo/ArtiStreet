@@ -17,8 +17,8 @@ body {
 
 }
 
-#nav-home-tab,
-#nav-profile-tab {
+#user-posts,
+#user-likes {
     width: 50%;
 }
 
