@@ -21,8 +21,6 @@ function timeAgo(date) {
     return "just now";
 }
 
-var currentUser;
-
 async function displayPostsDynamically(collection, type = "all") {
     let cardTemplate = document.getElementById("post-template");
 
@@ -49,55 +47,56 @@ async function displayPostsDynamically(collection, type = "all") {
         const location = doc.data().street.concat(", " + doc.data().city);
         const time = doc.data().time;
         const imgURL = doc.data().image_URL;
-        const userName = doc.data().user.username;
+        const userName = doc.data().user?.username || "Unknown User";
         const docID = doc.id;
 
         let newpost = cardTemplate.content.cloneNode(true);
 
-        // Add click event to title and picture to redirect to content_view.html
+        // Set image source and add click event for redirection
         const postPictureElement = newpost.querySelector('.post-picture');
         const postTitleElement = newpost.querySelector('.post-title');
         
-        // Set image source and onclick redirect to content_view.html
         if (postPictureElement && imgURL) {
             postPictureElement.src = imgURL;
             postPictureElement.onclick = () => {
-                window.location.href = `content_view.html?postId=${docID}`;
+                window.location.href = `content_view.html?docID=${docID}`;
             };
         }
 
-        // Make the title clickable as well
-        postTitleElement.innerHTML = title;
-        postTitleElement.onclick = () => {
-            window.location.href = `content_view.html?postId=${docID}`;
-        };
+        if (postTitleElement) {
+            postTitleElement.innerHTML = title;
+            postTitleElement.onclick = () => {
+                window.location.href = `content_view.html?docID=${docID}`;
+            };
+        }
 
         newpost.querySelector('.post-user').innerHTML = userName;
         newpost.querySelector('.post-location').innerHTML = location;
-        newpost.querySelector('.post-like').id = 'save-' + docID;
-        newpost.querySelector('.post-like').onclick = () => saveLike(docID);
+        const likeButton = newpost.querySelector('.post-like');
+        if (likeButton) {
+            likeButton.id = 'save-' + docID;
+            likeButton.onclick = () => saveLike(docID);
+        }
 
         currentUser = db.collection('users').doc(firebase.auth().currentUser.uid);
-
         currentUser.get().then(userDoc => {
-            var likes = userDoc.data().likes;
+            const likes = userDoc.data().likes || [];
             if (likes.includes(docID)) {
-                document.getElementById('save-' + docID).src = `../img/heart(1).png`;
+                likeButton.src = '../img/heart(1).png';
             }
         });
 
         // Add time display
-        if (time) {
-            const timeAgoText = timeAgo(time.toDate());
-            newpost.querySelector('.post-time').innerHTML = timeAgoText;
+        const timeElement = newpost.querySelector('.post-time');
+        if (time && timeElement) {
+            timeElement.innerHTML = timeAgo(time.toDate());
         } else {
-            newpost.querySelector('.post-time').innerHTML = "Unknown time";
+            timeElement.innerHTML = "Unknown time";
         }
 
         document.getElementById(collection + "-go-here").appendChild(newpost);
     });
 }
-
 
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
@@ -112,28 +111,27 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
-//-----------------------------------------------------------------------------
-// This function is called whenever the user clicks on the "bookmark" icon.
-// It adds the hike to the "bookmarks" array
-// Then it will change the bookmark icon from the hollow to the solid version. 
-//-----------------------------------------------------------------------------
+// Function to handle "like" functionality
 function saveLike(postID) {
     const user = firebase.auth().currentUser;
+    if (!user) {
+        console.error("No user is signed in.");
+        return;
+    }
+
     currentUser = db.collection('users').doc(user.uid);
-    console.log(currentUser);
-    // Manage the backend process to store the hikeDocID in the database, recording which hike was bookmarked by the user.
     currentUser.update({
-        // Use 'arrayUnion' to add the new bookmark ID to the 'bookmarks' array.
-        // This method ensures that the ID is added only if it's not already present, preventing duplicates.
         likes: firebase.firestore.FieldValue.arrayUnion(postID)
     })
-        // Handle the front-end update to change the icon, providing visual feedback to the user that it has been clicked.
-        .then(function () {
-            console.log("Post has been liked for" + postID);
-            let iconID = 'save-' + postID;
-            //console.log(iconID);
-            //this is to change the icon of the hike that was saved to "filled"
-            document.getElementById(iconID).src = '../img/heart(1).png';
-        });
+    .then(() => {
+        console.log("Post has been liked for " + postID);
+        let iconID = 'save-' + postID;
+        const likeIcon = document.getElementById(iconID);
+        if (likeIcon) {
+            likeIcon.src = '../img/heart(1).png'; // Update icon to filled heart
+        }
+    })
+    .catch(error => {
+        console.error("Error liking the post:", error);
+    });
 }
-

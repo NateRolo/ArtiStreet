@@ -1,5 +1,3 @@
-
-
 async function displayUserInfo() {
     firebase.auth().onAuthStateChanged(user => {
         if (!user) {
@@ -11,6 +9,11 @@ async function displayUserInfo() {
         let currentUser = db.collection("users").doc(user.uid);
 
         currentUser.get().then(userDoc => {
+            if (!userDoc.exists) {
+                console.error("User document does not exist.");
+                return;
+            }
+
             let userName = userDoc.data().username;
             let userHandle = userDoc.data().userHandle;
             let userBio = userDoc.data().userBio;
@@ -26,37 +29,61 @@ async function displayUserInfo() {
 
 displayUserInfo();
 
-function displayPostInfo() {
-    let params = new URL(window.location.href); // Get URL of the search bar
-    let ID = params.searchParams.get("docID"); // Get value for key "docID"
-    if (!ID) {
-        console.error("No post ID found in URL.");
-        return;
-    }
-    console.log("Post ID:", ID);
+// function displayPostInfo() {
+//     let params = new URL(window.location.href); // Get URL of the search bar
+//     let postID = params.searchParams.get("docID"); // Get value for key "docID"
+//     if (!ID) {
+//         console.error("No post ID found in URL.");
+//         return;
+//     }
+//     console.log("Post ID:", ID);
 
-    // Fetch the post document
-    db.collection("posts")
-        .doc(ID)
-        .get()
-        .then(doc => {
-            if (!doc.exists) {
-                console.error("Post not found");
-                return;
-            }
-            const thisPost = doc.data();
-            const PostCode = thisPost.code;
-            const PostName = thisPost.name;
+//     console.log(postID);
+
+//     // Fetch the post document
+//     db.collection("posts")
+//         .doc(ID)
+//         .get()
+//         .then(doc => {
+//             if (!doc.exists) {
+//                 console.error("Post not found");
+//                 return;
+//             }
+//             const thisPost = doc.data();
+//             const PostCode = thisPost.code;
+//             const PostName = thisPost.name;
             
-            // Populate title and image
-            document.getElementById("title").innerHTML = PostName;
-            let imgEvent = document.querySelector(".post-picture");
-            imgEvent.src = "./images/" + PostCode + ".jpg";
-        }).catch(error => {
-            console.error("Error fetching post data:", error);
-        });
+//             // Populate title and image, ensuring elements are loaded first
+//             if (PostName) document.getElementById("title").innerText = PostName;
+//             let imgEvent = document.querySelector(".post-picture");
+//             if (imgEvent) imgEvent.src = "./images/" + PostCode + ".jpg";
+//         }).catch(error => {
+//             console.error("Error fetching post data:", error);
+//         });
+// }
 
+// displayPostInfo();
+
+
+function displayPictureInfo() {
+    let params = new URL( window.location.href ); //get URL of search bar
+    let ID = params.searchParams.get( "docID" ); //get value for key "id"
+    console.log( ID );
+
+    // doublecheck: is your collection called "Reviews" or "reviews"?
+    db.collection( "posts" )
+        .doc( ID )
+        .get()
+        .then( doc => {
+            thisPost = doc.data();
+            PostCode = thisPost.code;
+            PostName = doc.data().name;
+            
+            // only populate title, and image
+            document.getElementById( "postName" ).innerHTML = PostName;
+            let imgEvent = document.querySelector( ".post-img" );
+            imgEvent.src = "../images/" + hikeCode + ".jpg";
+        } );
 }
 
-displayPostInfo();
-
+displayPictureInfo()
