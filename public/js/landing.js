@@ -158,18 +158,26 @@ async function displayPostsDynamically(collection, type = "all") {
 
         let newpost = cardTemplate.content.cloneNode(true);
 
+        // Add click event to title and picture to redirect to content_view.html
         const postPictureElement = newpost.querySelector('.post-picture');
+        const postTitleElement = newpost.querySelector('.post-title');
+        
+        // Set image source and onclick redirect to content_view.html
         if (postPictureElement && imgURL) {
             postPictureElement.src = imgURL;
-            // Add click event to the image only to redirect to content_view.html
             postPictureElement.onclick = () => {
                 window.location.href = `content_view.html?postId=${docID}`;
             };
         }
 
+        // Make the title clickable as well
+        postTitleElement.innerHTML = title;
+        postTitleElement.onclick = () => {
+            window.location.href = `content_view.html?postId=${docID}`;
+        };
+
         newpost.querySelector('.post-user').innerHTML = userName;
         newpost.querySelector('.post-location').innerHTML = location;
-        newpost.querySelector('.post-title').innerHTML = title;
         newpost.querySelector('.post-like').id = 'save-' + docID;
         newpost.querySelector('.post-like').onclick = () => saveLike(docID);
 
