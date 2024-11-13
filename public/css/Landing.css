@@ -45,6 +45,7 @@ svg {
     grid-template-rows: repeat(10, 0.1fr);
     grid-template-columns: repeat(4, 1fr);
     z-index: 0;
+    cursor: pointer;
 }
 
 .post-topbar {
@@ -69,6 +70,7 @@ svg {
     display: grid;
     grid-template-columns: 0.1fr 1fr;
     grid-template-rows: 0.1fr 0.1fr 0.1fr 0.1fr;
+    cursor: default;
 }
 
 .profileIcon {

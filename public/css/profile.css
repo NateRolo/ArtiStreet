@@ -17,8 +17,8 @@ body {
 
 }
 
-#nav-home-tab,
-#nav-profile-tab {
+#user-posts,
+#user-likes {
     width: 50%;
 }
 
@@ -190,6 +190,7 @@ body {
     grid-column: 3;
     vertical-align: middle;
     grid-row: 1;
+    cursor: pointer;
 }
 
 .post-kebab {
