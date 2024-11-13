@@ -74,3 +74,6 @@ function displayPictureInfo() {
 
 displayPictureInfo();
 
+function redirectToComment() {
+    window.location.href = "Comment.html";
+  }

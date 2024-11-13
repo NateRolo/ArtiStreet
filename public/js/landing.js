@@ -111,7 +111,7 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
-// Function to handle "like" functionality
+
 function saveLike(postID) {
     const user = firebase.auth().currentUser;
     if (!user) {
@@ -128,7 +128,7 @@ function saveLike(postID) {
         let iconID = 'save-' + postID;
         const likeIcon = document.getElementById(iconID);
         if (likeIcon) {
-            likeIcon.src = '../img/heart(1).png'; // Update icon to filled heart
+            likeIcon.src = '../img/heart(1).png'; 
         }
     })
     .catch(error => {
