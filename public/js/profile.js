@@ -36,7 +36,7 @@ async function displayUserInfo() {
                 //get the data fields of the user
                 let userName = userDoc.data().username;
                 let userHandle = userDoc.data().userHandle;
-                let userBio = userDoc.data().userBio;
+                let userBio = userDoc.data().bio;
                 //if the data fields are not empty, then write them in to the form.
                 if (userName != null) {
                     document.getElementById("user-name").innerHTML = userName;
