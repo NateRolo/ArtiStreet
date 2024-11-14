@@ -75,7 +75,7 @@ async function displayPostsDynamically(collection, type = "all") {
         const likeButton = newpost.querySelector('.post-like');
         if (likeButton) {
             likeButton.id = 'save-' + docID;
-            likeButton.onclick = () => saveLike(docID);
+            likeButton.onclick = () => toggleLike(docID);
         }
 
         currentUser = db.collection('users').doc(firebase.auth().currentUser.uid);
@@ -112,26 +112,73 @@ firebase.auth().onAuthStateChanged((user) => {
 });
 
 // save post to likes
-function saveLike(postID) {
+// function saveLike(postID) {
+//     const user = firebase.auth().currentUser;
+//     if (!user) {
+//         console.error("No user is signed in.");
+//         return;
+//     }
+
+//     currentUser = db.collection('users').doc(user.uid);
+//     currentUser.update({
+//         likes: firebase.firestore.FieldValue.arrayUnion(postID)
+//     })
+//     .then(() => {
+//         console.log("Post has been liked for " + postID);
+//         let iconID = 'save-' + postID;
+//         const likeIcon = document.getElementById(iconID);
+//         if (likeIcon) {
+//             likeIcon.src = '../img/heart(1).png'; 
+//         }
+//     })
+//     .catch(error => {
+//         console.error("Error liking the post:", error);
+//     });
+// }
+
+
+// Toggle like/unlike for a post
+function toggleLike(postID) {
     const user = firebase.auth().currentUser;
     if (!user) {
         console.error("No user is signed in.");
         return;
     }
 
-    currentUser = db.collection('users').doc(user.uid);
-    currentUser.update({
-        likes: firebase.firestore.FieldValue.arrayUnion(postID)
-    })
-    .then(() => {
-        console.log("Post has been liked for " + postID);
-        let iconID = 'save-' + postID;
+    const currentUser = db.collection('users').doc(user.uid);
+    currentUser.get().then(userDoc => {
+        const likes = userDoc.data().likes || [];
+        const iconID = 'save-' + postID;
         const likeIcon = document.getElementById(iconID);
-        if (likeIcon) {
-            likeIcon.src = '../img/heart(1).png'; 
+
+        if (likes.includes(postID)) {
+            // Unlike the post
+            currentUser.update({
+                likes: firebase.firestore.FieldValue.arrayRemove(postID)
+            })
+            .then(() => {
+                console.log("Post has been unliked for " + postID);
+                if (likeIcon) {
+                    likeIcon.src = '../img/heart.png'; // Set to unliked icon
+                }
+            })
+            .catch(error => {
+                console.error("Error unliking the post:", error);
+            });
+        } else {
+            // Like the post
+            currentUser.update({
+                likes: firebase.firestore.FieldValue.arrayUnion(postID)
+            })
+            .then(() => {
+                console.log("Post has been liked for " + postID);
+                if (likeIcon) {
+                    likeIcon.src = '../img/heart(1).png'; // Set to liked icon
+                }
+            })
+            .catch(error => {
+                console.error("Error liking the post:", error);
+            });
         }
-    })
-    .catch(error => {
-        console.error("Error liking the post:", error);
     });
 }
