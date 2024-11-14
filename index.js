@@ -13,8 +13,8 @@ app.get("/", function (req, res) {
     res.send(doc);
 });
 
-let port = 8000;
+let port = 8080;
 app.listen(port, function () {
-    console.log("App listening on port " + port + "!");
+    console.log("App listening on http://localhost:" + port + "/");
 });
 
