@@ -1,4 +1,4 @@
-
+// formats timestamp of posts as "x time ago"
 function timeAgo(date) {
     const now = new Date();
     const seconds = Math.floor((now - date) / 1000);
@@ -21,6 +21,7 @@ function timeAgo(date) {
     return "just now";
 }
 
+// populate page with user's info 
 async function displayUserInfo() {
     firebase.auth().onAuthStateChanged(user => {
         
@@ -53,7 +54,7 @@ async function displayUserInfo() {
 displayUserInfo();
 
 
-
+// populate page with posts 
 async function displayPostsDynamically(collection, filterType = "user") {
     const user = firebase.auth().currentUser;
     if (!user) {
@@ -66,17 +67,18 @@ async function displayPostsDynamically(collection, filterType = "user") {
     postContainer.innerHTML = "";
 
     let query;
-    if (filterType === "user") {
+    if (filterType === "user") { // show user posts
         query = db.collection(collection)
             .where("user.uid", "==", user.uid)
             .orderBy("time", "desc");
-    } else if (filterType === "liked") {
+    } else if (filterType === "liked") { // show liked posts
         const userDoc = await db.collection('users').doc(user.uid).get();
         const likes = userDoc.data().likes || [];
         query = db.collection(collection).where(firebase.firestore.FieldPath.documentId(), 'in', likes);
     }
 
     const posts = await query.get();
+    // populate template with data
     posts.forEach(doc => {
         const data = doc.data();
         let newPost = cardTemplate.content.cloneNode(true);
@@ -95,11 +97,11 @@ async function displayPostsDynamically(collection, filterType = "user") {
         newPost.querySelector('.post-user').innerHTML = data.user.username;
         newPost.querySelector('.post-location').innerHTML = `${data.street}, ${data.city}`;
         newPost.querySelector('.post-time').innerHTML = data.time ? timeAgo(data.time.toDate()) : "Unknown time";
-
+        // indicate whether post is liked by user or not 
         const likeButton = newPost.querySelector('.post-like');
         likeButton.id = 'save-' + doc.id;
         likeButton.onclick = () => toggleLike(doc.id, likeButton);
-
+        
         db.collection('users').doc(user.uid).get().then(userDoc => {
             const likes = userDoc.data().likes || [];
             if (likes.includes(doc.id)) {
@@ -142,6 +144,7 @@ function toggleLike(postID, likeButton) {
     }).catch(error => console.error("Error retrieving user data:", error));
 };
 
+// confirm user is logged in
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {        
         displayPostsDynamically("posts", "user");
@@ -150,14 +153,16 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
+// nav tab to view liked posts
 document.getElementById("user-likes").addEventListener("click", () => {
     displayPostsDynamically("posts", "liked");
     document.getElementById("user-likes").classList.toggle("active");
     document.getElementById("user-posts").classList.remove("active");
 });
 
+// nav tab  to view user's own posts
 document.getElementById("user-posts").addEventListener("click", () => {
     displayPostsDynamically("posts", "user");
-    document.getElementById("user-posts").classList.toggle("active");
+    document.getElementById("user-posts").classList.toggle("active"); 
     document.getElementById("user-likes").classList.remove("active");
 });

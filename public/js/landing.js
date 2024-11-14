@@ -111,7 +111,7 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
-
+// save post to likes
 function saveLike(postID) {
     const user = firebase.auth().currentUser;
     if (!user) {
