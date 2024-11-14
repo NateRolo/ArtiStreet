@@ -1,5 +1,5 @@
 
-
+// get logged in user data
 function getUserData() {
     const user = auth.currentUser;
     if (user) {
@@ -23,6 +23,7 @@ function getUserData() {
     }
 }
 
+// update username and bio to firestore
 document.getElementById('editProfileForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -45,6 +46,7 @@ document.getElementById('editProfileForm').addEventListener('submit', function (
     }
 });
 
+// change profile picture, update to firestore
 document.getElementById('profilePictureInput').addEventListener('change', function (e) {
     const user = auth.currentUser;
     if (!user) {

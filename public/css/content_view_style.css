@@ -64,9 +64,12 @@ body {
 
 .post-description {
     grid-column: 2;
-    grid-row: 4; /* Move the description below the handle */
-    font-size: 1rem; /* Adjust font size if needed */
-    margin-top: 5px; /* Optional: Add spacing between the handle and description */
+    grid-row: 4;
+    /* Move the description below the handle */
+    font-size: 1rem;
+    /* Adjust font size if needed */
+    margin-top: 5px;
+    /* Optional: Add spacing between the handle and description */
 }
 
 .post-time {
@@ -114,7 +117,7 @@ body {
     width: 150px;
     height: 40px;
     grid-column: 2;
-    grid-row: 6;              
+    grid-row: 6;
     background-color: #699ee3;
     border: none;
     color: white;
@@ -214,25 +217,30 @@ body {
 }
 
 #comment-form-card {
-    margin-top: 20px; /* Adds space between cards */
+    margin-top: 20px;
+    /* Adds space between cards */
 }
 
 #comment-form {
     display: grid;
-    grid-template-columns: 1fr; /* Single column form layout */
+    grid-template-columns: 1fr;
+    /* Single column form layout */
     gap: 10px;
 }
 
 #comments-list {
     display: grid;
-    grid-template-columns: 1fr; /* Single column layout for each comment */
+    grid-template-columns: 1fr;
+    /* Single column layout for each comment */
     gap: 15px;
 }
 
 .comment {
     display: grid;
-    grid-template-columns: 40px 1fr; /* Avatar + Content layout */
-    grid-template-rows: auto auto auto; /* Rows for content */
+    grid-template-columns: 40px 1fr;
+    /* Avatar + Content layout */
+    grid-template-rows: auto auto auto;
+    /* Rows for content */
     gap: 10px;
     padding: 15px;
     border-bottom: 1px solid #ddd;
@@ -247,7 +255,8 @@ body {
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    align-self: center; /* Align avatar in the center */
+    align-self: center;
+    /* Align avatar in the center */
 }
 
 .comment .comment-body {
@@ -271,7 +280,8 @@ body {
 .comment .comment-time {
     font-size: 0.75em;
     color: gray;
-    align-self: flex-start; /* Position time at the start */
+    align-self: flex-start;
+    /* Position time at the start */
 }
 
 #comment-text {
@@ -306,7 +316,8 @@ button[type="submit"] {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
-    align-self: flex-start; /* Align button to the left */
+    align-self: flex-start;
+    /* Align button to the left */
 }
 
 button[type="submit"]:hover {
@@ -314,6 +325,7 @@ button[type="submit"]:hover {
 }
 
 @media screen and (max-width: 768px) {
+
     /* Adjust for smaller screens */
     .card-body {
         padding: 15px;
@@ -324,7 +336,8 @@ button[type="submit"]:hover {
     }
 
     button[type="submit"] {
-        width: 100%; /* Full width for small screens */
+        width: 100%;
+        /* Full width for small screens */
     }
 
     #comment-form {
@@ -337,14 +350,18 @@ button[type="submit"]:hover {
 }
 
 #comment-form {
-    width: 200px; /* Increase the width to make the form bigger */
-    margin: 0 auto; /* This centers it horizontally */
+    width: 200px;
+    /* Increase the width to make the form bigger */
+    margin: 0 auto;
+    /* This centers it horizontally */
     display: flex;
     flex-direction: column;
-    align-items: center; /* This ensures child elements are centered horizontally */
-    justify-content: center; /* Centers the content vertically within its container */
-    height: 100%; /* Ensures the form takes up full height of the parent container */
-    transform: translateX(75px); /* You can adjust this for positioning */
+    align-items: center;
+    /* This ensures child elements are centered horizontally */
+    justify-content: center;
+    /* Centers the content vertically within its container */
+    height: 100%;
+    /* Ensures the form takes up full height of the parent container */
+    transform: translateX(75px);
+    /* You can adjust this for positioning */
 }
-
-
