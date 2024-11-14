@@ -27,12 +27,10 @@ body {
 
 /* Post description & Comment styling */
 
-/* Post description & Comment styling */
-
 .card .card-body {
     display: grid;
     grid-template-columns: 15% 85%;
-    grid-template-rows: auto auto auto auto auto auto;
+    grid-template-rows: auto auto auto auto auto auto auto;
     gap: 5px;
     align-items: center;
 }
@@ -91,7 +89,6 @@ body {
     font-size: 0.75em;
     color: gray;
 }
-
 
 /* Welcome Section Styling */
 
@@ -203,3 +200,151 @@ body {
         display: none;
     }
 }
+
+/* Styling for the comment section */
+.card {
+    margin-top: 20px;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+#comment-form-card {
+    margin-top: 20px; /* Adds space between cards */
+}
+
+#comment-form {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column form layout */
+    gap: 10px;
+}
+
+#comments-list {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column layout for each comment */
+    gap: 15px;
+}
+
+.comment {
+    display: grid;
+    grid-template-columns: 40px 1fr; /* Avatar + Content layout */
+    grid-template-rows: auto auto auto; /* Rows for content */
+    gap: 10px;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.comment:last-child {
+    border-bottom: none;
+}
+
+.comment .bi-person-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    align-self: center; /* Align avatar in the center */
+}
+
+.comment .comment-body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.comment .comment-body .username {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+}
+
+.comment .comment-body .content {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.comment .comment-time {
+    font-size: 0.75em;
+    color: gray;
+    align-self: flex-start; /* Position time at the start */
+}
+
+#comment-text {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    resize: vertical;
+    background-color: #fff;
+    transition: border-color 0.3s;
+}
+
+#comment-text:focus {
+    outline: none;
+    border-color: #7e09f0;
+    box-shadow: 0 0 5px rgba(126, 9, 240, 0.5);
+}
+
+#comment-text::placeholder {
+    color: #aaa;
+}
+
+button[type="submit"] {
+    width: 150px;
+    height: 40px;
+    background-color: #699ee3;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    align-self: flex-start; /* Align button to the left */
+}
+
+button[type="submit"]:hover {
+    background-color: #4a74ab;
+}
+
+@media screen and (max-width: 768px) {
+    /* Adjust for smaller screens */
+    .card-body {
+        padding: 15px;
+    }
+
+    #comment-text {
+        font-size: 0.9rem;
+    }
+
+    button[type="submit"] {
+        width: 100%; /* Full width for small screens */
+    }
+
+    #comment-form {
+        width: 100%;
+    }
+
+    #comments-list {
+        flex: 1;
+    }
+}
+
+#comment-form {
+    width: 200px; /* Increase the width to make the form bigger */
+    margin: 0 auto; /* This centers it horizontally */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* This ensures child elements are centered horizontally */
+    justify-content: center; /* Centers the content vertically within its container */
+    height: 100%; /* Ensures the form takes up full height of the parent container */
+    transform: translateX(75px); /* You can adjust this for positioning */
+}
+
+

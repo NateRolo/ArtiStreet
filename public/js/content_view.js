@@ -57,6 +57,41 @@ function displayPictureInfo() {
 displayPictureInfo();
 
 
-function redirectToComment() {
-    window.location.href = "Comment.html";
-}
+// function redirectToComment() {
+//     window.location.href = "Comment.html";
+// }
+
+function loadComments(postId) {
+    const commentsRef = db.collection('comments').where("postId", "==", postId);
+    commentsRef.onSnapshot(snapshot => {
+      const commentsList = document.getElementById("comments-list");
+      commentsList.innerHTML = "";
+      snapshot.forEach(doc => {
+        const comment = doc.data();
+        const commentElement = document.createElement("div");
+        commentElement.classList.add("comment");
+        commentElement.innerHTML = `<strong>${comment.username}</strong>: ${comment.text}`;
+        commentsList.appendChild(commentElement);
+      });
+    });
+  }
+
+  // Post a new comment
+  document.getElementById("comment-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const commentText = document.getElementById("comment-text").value;
+    const postId = "uniquePostId";  // Replace with actual post ID
+
+    db.collection("comments").add({
+      postId: postId,
+      username: "user123", // Replace with actual username
+      text: commentText,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    document.getElementById("comment-text").value = "";  // Clear comment input
+  });
+
+  // Load comments for a post
+  loadComments("uniquePostId");  // Replace with actual post ID

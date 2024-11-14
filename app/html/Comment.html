@@ -30,6 +30,26 @@
         </div>
     </nav>
 
+    <div class="container mt-4">
+        <h2>Add a Comment</h2>
+        
+        <!-- Comment Form -->
+        <form id="comment-form">
+            <div class="mb-3">
+                <label for="comment-text" class="form-label">Your Comment</label>
+                <textarea class="form-control" id="comment-text" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Comment</button>
+        </form>
+
+        <!-- Display Submitted Comments -->
+        <div id="comments-section" class="mt-4">
+            <h3>Comments</h3>
+            <div id="comments-list">
+                <!-- Comments will be dynamically added here -->
+            </div>
+        </div>
+    </div>
 
     <ul class="nav nav-pills nav-fill fixed-bottom bg-body-tertiary">
         <li class="nav-item">
@@ -74,7 +94,69 @@
     </ul>
 
     <script src="/js/firebaseAPI_TEAMBBY31.js"></script>
+    <script src="/js/Comment.js"></script>
 
+    <script>
+        // Get comment form elements
+        const commentForm = document.getElementById('comment-form');
+        const commentText = document.getElementById('comment-text');
+        const commentsList = document.getElementById('comments-list');
+
+        // Function to submit comment to Firebase Firestore
+        commentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const newComment = commentText.value.trim();
+            if (newComment) {
+                // Add comment to Firestore (assuming Firestore is initialized)
+                const postID = "yourPostID"; // This should be passed dynamically based on the post
+                const commentData = {
+                    text: newComment,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                db.collection('posts').doc(postID).collection('comments').add(commentData)
+                    .then(() => {
+                        // Clear the textarea
+                        commentText.value = '';
+                        // Optionally, refresh the comments list here
+                        loadComments(postID);
+                    })
+                    .catch((error) => {
+                        console.error("Error adding comment: ", error);
+                    });
+            }
+        });
+
+        // Function to load and display comments
+        function loadComments(postID) {
+            db.collection('posts').doc(postID).collection('comments')
+                .orderBy('timestamp', 'asc')
+                .get()
+                .then((querySnapshot) => {
+                    commentsList.innerHTML = ''; // Clear the list
+                    querySnapshot.forEach((doc) => {
+                        const comment = doc.data();
+                        const commentElement = document.createElement('div');
+                        commentElement.classList.add('comment');
+                        commentElement.innerHTML = `
+                            <p><strong>Anonymous:</strong> ${comment.text}</p>
+                            <small>${new Date(comment.timestamp.seconds * 1000).toLocaleString()}</small>
+                        `;
+                        commentsList.appendChild(commentElement);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error loading comments: ", error);
+                });
+        }
+
+        // Load comments when the page is loaded
+        window.onload = () => {
+            const postID = "yourPostID"; // Replace with dynamic post ID
+            loadComments(postID);
+        };
+    </script>
 </body>
 
 </html>
