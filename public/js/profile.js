@@ -24,7 +24,7 @@ function timeAgo(date) {
 // populate page with user's info 
 async function displayUserInfo() {
     firebase.auth().onAuthStateChanged(user => {
-        
+
         console.log(user);
         if (!user) {
             console.log("You need to be signed in to see your posts.");
@@ -66,6 +66,13 @@ async function displayPostsDynamically(collection, filterType = "user") {
     const postContainer = document.getElementById(`${collection}-go-here`);
     postContainer.innerHTML = "";
 
+    let userLikes = [];
+    if (currentUser) {
+        // Fetch user's liked posts
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        userLikes = userDoc.data().likes || [];
+    }
+
     let query;
     if (filterType === "user") { // show user posts
         query = db.collection(collection)
@@ -81,6 +88,8 @@ async function displayPostsDynamically(collection, filterType = "user") {
     // populate template with data
     posts.forEach(doc => {
         const data = doc.data();
+        const docID = doc.id;
+        const likesCount = data.likesCount || 0;
         let newPost = cardTemplate.content.cloneNode(true);
 
         const postPictureElement = newPost.querySelector('.post-picture');
@@ -97,59 +106,102 @@ async function displayPostsDynamically(collection, filterType = "user") {
         newPost.querySelector('.post-user').innerHTML = data.user.username;
         newPost.querySelector('.post-location').innerHTML = `${data.street}, ${data.city}`;
         newPost.querySelector('.post-time').innerHTML = data.time ? timeAgo(data.time.toDate()) : "Unknown time";
-        // indicate whether post is liked by user or not 
+
+        // Set like button and like count
         const likeButton = newPost.querySelector('.post-like');
-        likeButton.id = 'save-' + doc.id;
-        likeButton.onclick = () => toggleLike(doc.id, likeButton);
-        
-        db.collection('users').doc(user.uid).get().then(userDoc => {
-            const likes = userDoc.data().likes || [];
-            if (likes.includes(doc.id)) {
-                likeButton.src = '../img/heart(1).png';
+        const likeCountElement = newPost.querySelector('.post-like-count');
+        if (likeButton) {
+            likeButton.id = 'save-' + docID;
+            if (userLikes.includes(docID)) {
+                likeButton.src = '../img/heart(1).png'; // Set to liked icon
+            } else {
+                likeButton.src = '../img/heart.png'; // Set to unliked icon
             }
-        });
+            likeButton.onclick = () => toggleLike(docID);
+        }
+        if (likeCountElement) {
+            likeCountElement.id = 'like-count-' + docID;
+            likeCountElement.innerText = `${likesCount} like${likesCount !== 1 ? 's' : ''}`;
+        }
 
         postContainer.appendChild(newPost);
     });
 }
 
-// toggle likes
-function toggleLike(postID, likeButton) {
+async function toggleLike(postID, filterType = "user") {
     const user = firebase.auth().currentUser;
     if (!user) {
-        alert("You need to be logged in to view this content.");
+        console.error("No user is signed in.");
         return;
     }
 
-    const currentUserRef = db.collection('users').doc(user.uid);
+    const currentUser = db.collection('users').doc(user.uid);
+    const postRef = db.collection('posts').doc(postID);
+    const iconID = 'save-' + postID;
+    const likeIcon = document.getElementById(iconID);
+    const likeCountElement = document.getElementById('like-count-' + postID);
+    const postElement = document.getElementById(`post-${postID}`); // Post container
 
-    currentUserRef.get().then(userDoc => {
+    try {
+        // Fetch current user's liked posts
+        const userDoc = await currentUser.get();
         const likes = userDoc.data().likes || [];
-        // unlike post
+
+        // Fetch current like count of the post
+        const postDoc = await postRef.get();
+        let likeCount = postDoc.data().likesCount || 0;
+
         if (likes.includes(postID)) {
-            currentUserRef.update({
+            // Unlike the post
+            await currentUser.update({
                 likes: firebase.firestore.FieldValue.arrayRemove(postID)
-            }).then(() => {
-                likeButton.src = '../img/heart.png'; 
-                console.log("Post has been unliked for " + postID);
-            }).catch(error => console.error("Error unliking post:", error));
-        } else { // like post
-                currentUserRef.update({
+            });
+            await postRef.update({
+                likesCount: firebase.firestore.FieldValue.increment(-1)
+            });
+
+            console.log("Post has been unliked for " + postID);
+            if (likeIcon) {
+                likeIcon.src = '../img/heart.png'; // Set to unliked icon
+            }
+            likeCount--; // Decrement local counter
+
+            // Remove post dynamically if in "liked" tab
+            if (filterType === "liked" && postElement) {
+                postElement.remove();
+            }
+        } else {
+            // Like the post
+            await currentUser.update({
                 likes: firebase.firestore.FieldValue.arrayUnion(postID)
-            }).then(() => {
-                likeButton.src = '../img/heart(1).png'; 
-                console.log("Post has been liked for " + postID);
-            }).catch(error => console.error("Error liking post:", error));
+            });
+            await postRef.update({
+                likesCount: firebase.firestore.FieldValue.increment(1)
+            });
+
+            console.log("Post has been liked for " + postID);
+            if (likeIcon) {
+                likeIcon.src = '../img/heart(1).png'; // Set to liked icon
+            }
+            likeCount++; // Increment local counter
         }
-    }).catch(error => console.error("Error retrieving user data:", error));
-};
+
+        // Update the like count display
+        if (likeCountElement) {
+            likeCountElement.innerText = `${likeCount} like${likeCount !== 1 ? 's' : ''}`;
+        }
+    } catch (error) {
+        console.error("Error updating like status or count:", error);
+    }
+}
+
 
 // confirm user is logged in
 firebase.auth().onAuthStateChanged((user) => {
-    if (user) {        
+    if (user) {
         displayPostsDynamically("posts", "user");
     } else {
-        console.log("User not logged in.");        
+        console.log("User not logged in.");
     }
 });
 
@@ -163,6 +215,6 @@ document.getElementById("user-likes").addEventListener("click", () => {
 // nav tab  to view user's own posts
 document.getElementById("user-posts").addEventListener("click", () => {
     displayPostsDynamically("posts", "user");
-    document.getElementById("user-posts").classList.toggle("active"); 
+    document.getElementById("user-posts").classList.toggle("active");
     document.getElementById("user-likes").classList.remove("active");
 });
