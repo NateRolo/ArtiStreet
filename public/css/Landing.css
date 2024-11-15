@@ -98,8 +98,12 @@ svg {
     height: 100px;
     grid-column: 3;
     grid-row: 1 / span 2;
-    transform: translateY(10px);
+    transform: translateY(-20px);
     cursor: pointer;
+}
+
+.post-like-count{
+    font-size: 2em;
 }
 
 .post-kebab {
