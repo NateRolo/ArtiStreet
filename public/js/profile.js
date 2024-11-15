@@ -38,6 +38,7 @@ async function displayUserInfo() {
                 let userName = userDoc.data().username;
                 let userHandle = userDoc.data().userHandle;
                 let userBio = userDoc.data().bio;
+                let pfp = userDoc.data().profile_picture;
                 //if the data fields are not empty, then write them in to the form.
                 if (userName != null) {
                     document.getElementById("user-name").innerHTML = userName;
@@ -48,6 +49,10 @@ async function displayUserInfo() {
                 if (userBio != null) {
                     document.getElementById("user-bio").innerHTML = userBio;
                 }
+                if (pfp != null) {
+                    document.getElementById("pfp").src = pfp;
+                }
+                console.log(pfp);
             })
     })
 }
@@ -218,3 +223,53 @@ document.getElementById("user-posts").addEventListener("click", () => {
     document.getElementById("user-posts").classList.toggle("active");
     document.getElementById("user-likes").classList.remove("active");
 });
+
+document.getElementById("edit-profile").addEventListener("click", () => {
+    editProfile();
+})
+
+// edit profile picture
+async function editProfile() {
+    // clear posts and nav tab
+    document.getElementById("posts-go-here").style.display = "none";
+    document.getElementById("nav-tab").style.display = "none";
+
+    // insert forms
+    let str = `
+        <form>
+            <label for="newpfp">Update prolfile picture</label>
+            <input type="file" id="newpfp" name="newpfp"> 
+        </form>
+        <button id="save-profile" type="submit">Save</button> `
+    document.getElementById("pfp-container").innerHTML = "";
+    document.getElementById("pfp-container").innerHTML = str; 
+    document.getElementById("save-profile").onclick = () => saveProfile();
+};
+
+async function saveProfile(){
+    const img = document.getElementById("newpfp");
+    const imgFile = img.files[0];
+    // upload image to firebase storage and get URL
+    const storageRef = storage.ref(`images/${imgFile.name}`);
+    await storageRef.put(imgFile);
+    const imgURL = await storageRef.getDownloadURL();
+    console.log(imgURL);
+    // get user data
+    const user = firebase.auth().currentUser;
+    const userDoc = await db.collection("users").doc(user.uid).get();
+
+    const userData = userDoc.data();
+
+    db.collection('users').doc(user.uid).update({
+        profile_picture: imgURL
+    });
+   
+    console.log(userDoc.profile_picure);
+    document.getElementById("posts-go-here").style.display = "block";
+    await displayUserInfo();
+    await displayPostsDynamically();
+    document.getElementById("nav-tab").style.display = "block";
+
+};
+
+
