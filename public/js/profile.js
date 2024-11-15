@@ -21,6 +21,7 @@ function timeAgo(date) {
     return "just now";
 }
 
+
 // populate page with user's info 
 async function displayUserInfo() {
     firebase.auth().onAuthStateChanged(user => {
@@ -228,11 +229,14 @@ document.getElementById("edit-profile").addEventListener("click", () => {
     editProfile();
 })
 
+const profileHeader = document.getElementById("pfp-container").innerHTML;
+const postContainer = document.getElementById("posts-go-here").innerHTML;
 // edit profile picture
 async function editProfile() {
     // clear posts and nav tab
     document.getElementById("posts-go-here").style.display = "none";
     document.getElementById("nav-tab").style.display = "none";
+   
 
     // insert forms
     let str = `
@@ -246,30 +250,37 @@ async function editProfile() {
     document.getElementById("save-profile").onclick = () => saveProfile();
 };
 
+
+async function cancelEdit(){
+
+}
+
+
 async function saveProfile(){
     const img = document.getElementById("newpfp");
     const imgFile = img.files[0];
+    
     // upload image to firebase storage and get URL
     const storageRef = storage.ref(`images/${imgFile.name}`);
     await storageRef.put(imgFile);
     const imgURL = await storageRef.getDownloadURL();
     console.log(imgURL);
+    
     // get user data
     const user = firebase.auth().currentUser;
     const userDoc = await db.collection("users").doc(user.uid).get();
-
-    const userData = userDoc.data();
-
+    
+    // update firestore, restore profile page
     db.collection('users').doc(user.uid).update({
         profile_picture: imgURL
+    }).then(function() {        
+        document.getElementById("pfp-container").innerHTML = profileHeader;
+        document.getElementById("posts-go-here").innerHTML = postContainer;
+        document.getElementById("nav-tab").style.display = "block";
+    }).then(async function() {
+        displayUserInfo();
+        displayPostsDynamically();
     });
-   
-    console.log(userDoc.profile_picure);
-    document.getElementById("posts-go-here").style.display = "block";
-    await displayUserInfo();
-    await displayPostsDynamically();
-    document.getElementById("nav-tab").style.display = "block";
-
 };
 
 
