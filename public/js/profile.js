@@ -26,7 +26,7 @@ function timeAgo(date) {
 async function displayUserInfo() {
     firebase.auth().onAuthStateChanged(user => {
 
-        
+
         if (!user) {
             console.log("You need to be signed in to see your posts.");
         }
@@ -53,7 +53,7 @@ async function displayUserInfo() {
                 if (pfp != null) {
                     document.getElementById("pfp").src = pfp;
                 }
-                
+
             })
     })
 }
@@ -234,60 +234,151 @@ const postContainer = document.getElementById("posts-go-here").innerHTML;
 
 let originalPostContainer = ""; // Global variable to save posts content
 
-// edit profile function
 async function editProfile() {
-
-    // Save posts content and hide posts
+    const profileHeader = document.getElementById("profileHeader");
+    const editButton = document.getElementById("edit-profile");
     const postsElement = document.getElementById("posts-go-here");
     const navTabElement = document.getElementById("nav-tab");
 
-    // Save current content
-    originalPostContainer = postsElement.innerHTML;
-
-    // Hide posts and nav tab
+    // Hide the Edit Profile button, posts, and nav tab
+    editButton.style.display = "none";
     postsElement.style.display = "none";
     navTabElement.style.display = "none";
-    
 
-    // Insert edit form
-    const str = `
-        <form>
-            <label for="newpfp">Update profile picture</label>
-            <input type="file" id="newpfp" name="newpfp"> 
-        </form>
-        <button id="save-profile" type="submit">Save</button> 
-    `;
-    document.getElementById("pfp-container").innerHTML = str;
-
-    document.getElementById("save-profile").onclick = () => saveProfile();
-};
-
-async function saveProfile() {
-    const img = document.getElementById("newpfp");
-    const imgFile = img.files[0];
-    
-    if (!imgFile) {
-        console.error("No image selected.");
-        return;
-    }
-
-    // Upload image to Firebase Storage
-    const storageRef = storage.ref(`images/${imgFile.name}`);
-    await storageRef.put(imgFile);
-    const imgURL = await storageRef.getDownloadURL();
-
-    // Update Firestore with new profile picture
+    // Fetch the current user data
     const user = firebase.auth().currentUser;
-    await db.collection('users').doc(user.uid).update({
-        profile_picture: imgURL
+    const userDoc = await db.collection("users").doc(user.uid).get();
+    const { username, userHandle, bio, profile_picture } = userDoc.data();
+
+    // Replace profileHeader content with forms
+    profileHeader.innerHTML = `
+        <div id="edit-profile-forms">
+            <form>
+                <div>
+                    <label for="edit-pfp">Profile Picture:</label>
+                    <br>
+                    <img 
+                        id="current-pfp" 
+                        src="${profile_picture}" 
+                        alt="Current Profile Picture" 
+                        style="width: 150px; height: auto; border: 1px solid #ccc; margin: 10px 0; cursor: pointer;"
+                    >
+                    <input 
+                        type="file" 
+                        id="edit-pfp" 
+                        name="edit-pfp" 
+                        accept="image/*" 
+                        style="display: none;"
+                    >
+                    <img 
+                        id="pfp-preview" 
+                        style="display: none; width: 150px; height: auto; border: 1px solid #ccc; margin-top: 10px;" 
+                        alt="Preview"
+                    >
+                </div>
+                <div>
+                    <label for="edit-username">Username:</label>
+                    <input type="text" id="edit-username" name="edit-username" value="${username}">
+                </div>
+               <div>
+                    <label for="edit-bio">Bio:</label>
+                    <textarea id="edit-bio" name="edit-bio">${bio}</textarea>
+                </div>
+                <button id="save-profile" type="button">Save</button>
+                <button id="cancel-edit" type="button">Cancel</button>
+            </form>
+        </div>
+    `;
+
+   // Add event listener for profile picture click
+const currentPfp = document.getElementById("current-pfp");
+const editPfpInput = document.getElementById("edit-pfp");
+const previewPfp = document.getElementById("pfp-preview");
+
+currentPfp.addEventListener("click", () => {
+    editPfpInput.click(); // Open file picker when clicking the current profile picture
+});
+
+editPfpInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            previewPfp.src = e.target.result; // Set preview image source
+            previewPfp.style.display = "block"; // Show the preview image
+            currentPfp.style.display = "none"; // Hide the current profile picture
+        };
+        reader.readAsDataURL(file); // Read the file for preview
+    } else {
+        // Reset preview if no file is selected
+        previewPfp.style.display = "none";
+        currentPfp.style.display = "block";
+    }
+});
+
+// Allow user to re-select the current profile picture if needed
+previewPfp.addEventListener("click", () => {
+    editPfpInput.click(); // Open file picker when clicking the preview picture
+});
+
+
+    
+    // Event Listener: Save profile
+    document.getElementById("save-profile").addEventListener("click", async () => {
+        const confirmSave = confirm("Are you sure you want to save your changes?");
+        if (confirmSave) {
+            await saveProfile();
+            restoreUI(profileHeader, editButton, postsElement, navTabElement);
+            alert("Your profile has been updated successfully!");
+        }
     });
 
-    // Restore profile page
-    document.getElementById("pfp-container").innerHTML = profileHeader;
-    document.getElementById("posts-go-here").style.display = "block";
-    document.getElementById("nav-tab").style.display = "";
+    // Event Listener: Cancel edit
+    document.getElementById("cancel-edit").addEventListener("click", () => {
+        const confirmCancel = confirm("Are you sure you want to cancel editing?");
+        if (confirmCancel) {
+            restoreUI(profileHeader, editButton, postsElement, navTabElement);
+        }
+    });
+}
 
-    // Reload user info and posts
-    displayUserInfo();
-    displayPostsDynamically("posts", "user"); // Reload posts dynamically
+// Restore the original UI
+function restoreUI(profileHeader, editButton, postsElement, navTabElement) {
+    location.reload(); // Alternatively, reload content dynamically if necessary
+    editButton.style.display = "block";
+    postsElement.style.display = "block";
+    navTabElement.style.display = "flex";
+}
+
+async function saveProfile() {
+    const user = firebase.auth().currentUser;
+    const userDocRef = db.collection("users").doc(user.uid);
+
+    // Update username and bio
+    const newUsername = document.getElementById("edit-username").value;
+    const newHandle = document.getElementById("edit-handle").value;
+    const newBio = document.getElementById("edit-bio").value;
+
+    // profile picture upload
+    const fileInput = document.getElementById("edit-pfp");
+    const file = fileInput.files[0];
+    let newProfilePicture = null;
+
+    if (file) {
+        const storageRef = storage.ref(`images/${file.name}`);
+        await storageRef.put(file);
+        newProfilePicture = await storageRef.getDownloadURL();
+    }
+
+    // Update Firestore
+    const updates = {
+        username: newUsername,
+        bio: newBio
+    };
+
+    if (newProfilePicture) {
+        updates.profile_picture = newProfilePicture;
+    }
+
+    await userDocRef.update(updates);
 };
