@@ -141,6 +141,21 @@ async function displayPostsDynamically(collection, filterType = "user") {
             likeCountElement.innerText = `${likesCount} like${likesCount !== 1 ? 's' : ''}`;
         }
 
+        // Add an "Edit" button if the current user is the owner of the post
+        if (data.user.uid === user.uid) { // Check if the post owner matches the current user
+            const editButton = document.createElement("button");
+            editButton.innerText = "Edit";
+            editButton.className = "post-edit-button";
+            editButton.onclick = () => {
+                window.location.href = `add_edit_post.html?docId=${docID}`;
+            };
+
+            const postBottomBar = newPost.querySelector('.post-bottombar');
+            if (postBottomBar) {
+                postBottomBar.appendChild(editButton);
+            }
+        }
+
         postContainer.appendChild(newPost);
     }
 }
@@ -367,7 +382,7 @@ function restoreUI(profileHeader, editButton, postsElement, navTabElement) {
 async function saveProfile() {
     const user = firebase.auth().currentUser;
     const userDocRef = db.collection("users").doc(user.uid);
-    
+
     // Update username and bio
     const newUsername = document.getElementById("edit-username").value;
     const newBio = document.getElementById("edit-bio").value;

@@ -85,6 +85,7 @@ body {
     grid-row: 1;
 }
 
+
 #text small {
     font-size: 1em;
     color: gray;
@@ -213,7 +214,7 @@ body {
 .post-like {
     width: 80%;
     cursor: pointer;
-    grid-column: 3;
+    grid-column: 4;
     grid-row: 1;
     
 }
@@ -221,11 +222,14 @@ body {
 .post-like-count {
     font-size: 0.8em;
     color: gray;
-    grid-column: 4;
+    grid-column: 3;
     grid-row: 1;
 }
 
-
+.post-edit-button {
+    grid-column: 4;
+    grid-row: 2;
+}
 
 /* Navigation tab */
 #nav-tab {
