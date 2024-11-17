@@ -423,4 +423,6 @@ async function updateUserPostsUsername(newUsername) {
     } catch (error) {
         console.error("Error updating username in posts:", error);
     }
-}
+};
+
+
