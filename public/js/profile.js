@@ -60,7 +60,7 @@ async function displayUserInfo() {
 displayUserInfo();
 
 
-// populate page with posts 
+// populate page with posts
 async function displayPostsDynamically(collection, filterType = "user") {
     const user = firebase.auth().currentUser;
     if (!user) {
@@ -91,15 +91,18 @@ async function displayPostsDynamically(collection, filterType = "user") {
     }
 
     const posts = await query.get();
-    // populate template with data
-    posts.forEach(doc => {
+    for (const doc of posts.docs) {
         const data = doc.data();
         const docID = doc.id;
         const likesCount = data.likesCount || 0;
-        let newPost = cardTemplate.content.cloneNode(true);
+        const newPost = cardTemplate.content.cloneNode(true);
 
         const postPictureElement = newPost.querySelector('.post-picture');
         const postTitleElement = newPost.querySelector('.post-title');
+        const postUserElement = newPost.querySelector('.post-user');
+        const postLocationElement = newPost.querySelector('.post-location');
+        const postTimeElement = newPost.querySelector('.post-time');
+        const postProfileImageElement = newPost.querySelector('.profileIcon');
 
         if (postPictureElement && data.image_URL) {
             postPictureElement.src = data.image_URL;
@@ -109,9 +112,16 @@ async function displayPostsDynamically(collection, filterType = "user") {
         postTitleElement.innerHTML = data.title;
         postTitleElement.onclick = () => window.location.href = `content_view.html?postId=${doc.id}`;
 
-        newPost.querySelector('.post-user').innerHTML = data.user.username;
-        newPost.querySelector('.post-location').innerHTML = `${data.street}, ${data.city}`;
-        newPost.querySelector('.post-time').innerHTML = data.time ? timeAgo(data.time.toDate()) : "Unknown time";
+        if (postUserElement) postUserElement.innerHTML = data.user.username;
+        if (postLocationElement) postLocationElement.innerHTML = `${data.street}, ${data.city}`;
+        if (postTimeElement) postTimeElement.innerHTML = data.time ? timeAgo(data.time.toDate()) : "Unknown time";
+
+        // Fetch profile image for the user who created the post
+        if (postProfileImageElement) {
+            const postUserDoc = await db.collection('users').doc(data.user.uid).get();
+            const postUserProfileImage = postUserDoc.data().profile_picture || '/img/default_profile.png';
+            postProfileImageElement.src = postUserProfileImage;
+        }
 
         // Set like button and like count
         const likeButton = newPost.querySelector('.post-like');
@@ -131,8 +141,9 @@ async function displayPostsDynamically(collection, filterType = "user") {
         }
 
         postContainer.appendChild(newPost);
-    });
+    }
 }
+
 
 async function toggleLike(postID, filterType = "user") {
     const user = firebase.auth().currentUser;
@@ -290,44 +301,46 @@ async function editProfile() {
         </div>
     `;
 
-   // Add event listener for profile picture click
-const currentPfp = document.getElementById("current-pfp");
-const editPfpInput = document.getElementById("edit-pfp");
-const previewPfp = document.getElementById("pfp-preview");
+    // Add event listener for profile picture click
+    const currentPfp = document.getElementById("current-pfp");
+    const editPfpInput = document.getElementById("edit-pfp");
+    const previewPfp = document.getElementById("pfp-preview");
 
-currentPfp.addEventListener("click", () => {
-    editPfpInput.click(); // Open file picker when clicking the current profile picture
-});
+    currentPfp.addEventListener("click", () => {
+        editPfpInput.click(); // Open file picker when clicking the current profile picture
+    });
 
-editPfpInput.addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            previewPfp.src = e.target.result; // Set preview image source
-            previewPfp.style.display = "block"; // Show the preview image
-            currentPfp.style.display = "none"; // Hide the current profile picture
-        };
-        reader.readAsDataURL(file); // Read the file for preview
-    } else {
-        // Reset preview if no file is selected
-        previewPfp.style.display = "none";
-        currentPfp.style.display = "block";
-    }
-});
+    editPfpInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewPfp.src = e.target.result; // Set preview image source
+                previewPfp.style.display = "block"; // Show the preview image
+                currentPfp.style.display = "none"; // Hide the current profile picture
+            };
+            reader.readAsDataURL(file); // Read the file for preview
+        } else {
+            // Reset preview if no file is selected
+            previewPfp.style.display = "none";
+            currentPfp.style.display = "block";
+        }
+    });
 
-// Allow user to re-select the current profile picture if needed
-previewPfp.addEventListener("click", () => {
-    editPfpInput.click(); // Open file picker when clicking the preview picture
-});
+    // Allow user to re-select the current profile picture if needed
+    previewPfp.addEventListener("click", () => {
+        editPfpInput.click(); // Open file picker when clicking the preview picture
+    });
 
 
-    
+
     // Event Listener: Save profile
     document.getElementById("save-profile").addEventListener("click", async () => {
         const confirmSave = confirm("Are you sure you want to save your changes?");
+        const newUsername = document.getElementById("edit-username").value;
         if (confirmSave) {
             await saveProfile();
+            await updateUserPostsUsername(newUsername);
             restoreUI(profileHeader, editButton, postsElement, navTabElement);
             alert("Your profile has been updated successfully!");
         }
@@ -353,10 +366,9 @@ function restoreUI(profileHeader, editButton, postsElement, navTabElement) {
 async function saveProfile() {
     const user = firebase.auth().currentUser;
     const userDocRef = db.collection("users").doc(user.uid);
-
+    
     // Update username and bio
     const newUsername = document.getElementById("edit-username").value;
-    const newHandle = document.getElementById("edit-handle").value;
     const newBio = document.getElementById("edit-bio").value;
 
     // profile picture upload
@@ -382,3 +394,33 @@ async function saveProfile() {
 
     await userDocRef.update(updates);
 };
+
+// update user's posts with new username
+async function updateUserPostsUsername(newUsername) {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        console.log("No user is signed in.");
+        return;
+    }
+
+    try {
+        // Fetch all posts created by this user
+        const userPostsQuery = db.collection("posts").where("user.uid", "==", user.uid);
+        const userPostsSnapshot = await userPostsQuery.get();
+
+        // Start a Firestore batch to update all posts
+        const batch = db.batch();
+
+        userPostsSnapshot.forEach((postDoc) => {
+            const postRef = db.collection("posts").doc(postDoc.id);
+            batch.update(postRef, { "user.username": newUsername });
+        });
+
+        // Commit the batch update
+        await batch.commit();
+
+        console.log("Username updated successfully in user document and all posts.");
+    } catch (error) {
+        console.error("Error updating username in posts:", error);
+    }
+}

@@ -176,7 +176,8 @@ body {
 /* Post Bottom Bar */
 .post-bottombar {
     display: grid;
-    grid-template-columns: auto auto 1fr auto auto; 
+    grid-template-columns: 10% 60% 15% 15%;
+    grid-template-rows: minmax(10px, auto);
     gap: 10px; 
     padding: 10px;
     background-color: #f8f9fa;
@@ -188,32 +189,43 @@ body {
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
+    grid-column: 1;
+    grid-row: 1;
 }
 
 .post-user {
     font-weight: bold;
+    grid-column: 2;
+    grid-row: 1;
 }
 
 .post-time {
     font-size: 0.8em;
     color: gray;
+    grid-column: 2;
+    grid-row: 2;
 }
 
 .post-like {
     width: 24px;
     height: 24px;
     cursor: pointer;
+    grid-column: 3;
+    grid-row: 1;
 }
 
 .post-like-count {
     font-size: 0.8em;
     color: gray;
+    grid-column: 3;
+    grid-row: 2;
 }
 
 .post-kebab {
     width: 20px;
     height: 20px;
     cursor: pointer;
+    grid-column: 4;
 }
 
 /* Navigation tab */
@@ -293,11 +305,7 @@ body {
         max-width: 100%;
     }
 
-    .post-bottombar {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto; 
-        gap: 5px;
-    }
+
 
     .profileIcon {
         width: 30px;
