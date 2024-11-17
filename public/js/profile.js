@@ -107,11 +107,11 @@ async function displayPostsDynamically(collection, filterType = "user") {
 
         if (postPictureElement && imgURL) {
             postPictureElement.src = imgURL;
-            postPictureElement.onclick = () => window.location.href = `content_view.html?docId=${docID}`;
+            postPictureElement.onclick = () => window.location.href = `content_view.html?docID=${docID}`;
         }
 
         postTitleElement.innerHTML = data.title;
-        postTitleElement.onclick = () => window.location.href = `content_view.html?docId=${docID}`;
+        postTitleElement.onclick = () => window.location.href = `content_view.html?docID=${docID}`;
 
         if (postUserElement) postUserElement.innerHTML = data.user.username;
         if (postLocationElement) postLocationElement.innerHTML = `${data.street}, ${data.city}`;
