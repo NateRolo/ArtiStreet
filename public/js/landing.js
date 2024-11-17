@@ -126,30 +126,7 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
-// save post to likes
-// function saveLike(postID) {
-//     const user = firebase.auth().currentUser;
-//     if (!user) {
-//         console.error("No user is signed in.");
-//         return;
-//     }
 
-//     currentUser = db.collection('users').doc(user.uid);
-//     currentUser.update({
-//         likes: firebase.firestore.FieldValue.arrayUnion(postID)
-//     })
-//     .then(() => {
-//         console.log("Post has been liked for " + postID);
-//         let iconID = 'save-' + postID;
-//         const likeIcon = document.getElementById(iconID);
-//         if (likeIcon) {
-//             likeIcon.src = '../img/heart(1).png'; 
-//         }
-//     })
-//     .catch(error => {
-//         console.error("Error liking the post:", error);
-//     });
-// }
 
 
 // Toggle like/unlike for a post

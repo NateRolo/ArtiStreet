@@ -96,6 +96,7 @@ async function displayPostsDynamically(collection, filterType = "user") {
         const docID = doc.id;
         const likesCount = data.likesCount || 0;
         const newPost = cardTemplate.content.cloneNode(true);
+        const imgURL = data.image_URL;
 
         const postPictureElement = newPost.querySelector('.post-picture');
         const postTitleElement = newPost.querySelector('.post-title');
@@ -104,13 +105,13 @@ async function displayPostsDynamically(collection, filterType = "user") {
         const postTimeElement = newPost.querySelector('.post-time');
         const postProfileImageElement = newPost.querySelector('.profileIcon');
 
-        if (postPictureElement && data.image_URL) {
-            postPictureElement.src = data.image_URL;
-            postPictureElement.onclick = () => window.location.href = `content_view.html?postId=${doc.id}`;
+        if (postPictureElement && imgURL) {
+            postPictureElement.src = imgURL;
+            postPictureElement.onclick = () => window.location.href = `content_view.html?docId=${docID}`;
         }
 
         postTitleElement.innerHTML = data.title;
-        postTitleElement.onclick = () => window.location.href = `content_view.html?postId=${doc.id}`;
+        postTitleElement.onclick = () => window.location.href = `content_view.html?docId=${docID}`;
 
         if (postUserElement) postUserElement.innerHTML = data.user.username;
         if (postLocationElement) postLocationElement.innerHTML = `${data.street}, ${data.city}`;

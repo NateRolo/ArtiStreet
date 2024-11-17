@@ -171,6 +171,7 @@ body {
     height: auto;
     object-fit: cover;
     display: block; 
+    cursor: pointer;
 }
 
 /* Post Bottom Bar */
