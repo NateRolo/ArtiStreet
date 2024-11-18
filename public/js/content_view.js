@@ -1,5 +1,5 @@
-// populate page with user info
-function displayPictureInfo() {
+ // Populate the page with user info
+ function displayPictureInfo() {
   let params = new URL(window.location.href);
   let ID = params.searchParams.get("docID");
   console.log("Post ID:", ID);
@@ -9,7 +9,6 @@ function displayPictureInfo() {
     .get()
     .then((doc) => {
       if (doc.exists) {
-
         let thisPost = doc.data();
         console.log("Post Data:", thisPost); // Log the entire post document to see its structure
 
@@ -45,7 +44,6 @@ function displayPictureInfo() {
         document.getElementById("user-handle").innerHTML = "@" + userHandle; // Use handle from user map
         console.log("Username:", userName);
         console.log("Handle:", userHandle);
-
       } else {
         console.log("No such document!");
       }
@@ -57,14 +55,13 @@ function displayPictureInfo() {
 
 displayPictureInfo();
 
-
-// load comments under post 
+// Load comments under the post
 function loadComments(postId) {
-  const commentsRef = db.collection('comments').where("postId", "==", postId);
-  commentsRef.onSnapshot(snapshot => {
+  const commentsRef = db.collection("comments").where("postId", "==", postId);
+  commentsRef.onSnapshot((snapshot) => {
     const commentsList = document.getElementById("comments-list");
     commentsList.innerHTML = "";
-    snapshot.forEach(doc => {
+    snapshot.forEach((doc) => {
       const comment = doc.data();
       const commentElement = document.createElement("div");
       commentElement.classList.add("comment");
@@ -79,17 +76,54 @@ document.getElementById("comment-form").addEventListener("submit", function (e) 
   e.preventDefault();
 
   const commentText = document.getElementById("comment-text").value;
-  const postId = "uniquePostId";  // Replace with actual post ID
+  const postId = getPostIdFromURL(); // Get the current post ID dynamically
 
-  db.collection("comments").add({
-    postId: postId,
-    username: "user123", // Replace with actual username
-    text: commentText,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  // Ensure the user is logged in
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // Fetch additional user data if stored in Firestore
+      db.collection("users")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            const userData = doc.data();
+            const username = userData.username; // Replace with the actual field for username in your Firestore
+
+            // Add the comment to Firestore
+            db.collection("comments")
+              .add({
+                postId: postId,
+                username: username,
+                text: commentText,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+              })
+              .then(() => {
+                console.log("Comment successfully added!");
+                document.getElementById("comment-text").value = ""; // Clear comment input
+              })
+              .catch((error) => {
+                console.error("Error adding comment: ", error);
+              });
+          } else {
+            console.log("User document not found!");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data: ", error);
+        });
+    } else {
+      console.log("No user is logged in.");
+    }
   });
-
-  document.getElementById("comment-text").value = "";  // Clear comment input
 });
 
-// Load comments for a post
-loadComments("uniquePostId");  // Replace with actual post ID
+// Helper function to get the post ID from URL parameters
+function getPostIdFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("docID"); // Assumes post ID is passed as a query parameter
+}
+
+// Load comments for the current post
+const postId = getPostIdFromURL();
+loadComments(postId); // Dynamically load comments for the specific post
