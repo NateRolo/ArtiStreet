@@ -32,31 +32,30 @@ body {
 
 .inputs {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    
+    grid-template-rows: 40vh auto auto auto;
     grid-gap: 1vw;
     padding-top: 20px;
     width: 90vw;
     margin: auto;
-    grid-template-areas:
-        "image image title title"
-        "image image location location"
-        "description description description description";
+  
 }
 
 #image {
-    grid-area: image;
+    
+    grid-row: 1;
 }
 
 #title {
-    grid-area: title;
+    grid-row: 2;
 }
 
 #location {
-    grid-area: location;
+    grid-row: 3;
 }
 
 #input-description {
-    grid-area: description;
+    grid-row: 4;
 }
 
 .button-container {
@@ -92,7 +91,15 @@ input[type="file"] {
     height: 100%;
     text-align: center;
     border: 1px solid black;
+    z-index: 1000;
 
+}
+
+#img-upload-preview {
+    width: 100%;
+    height: 100%;
+    
+    grid-row: 1;
 }
 
 /* Desktop navbar styling. Copy and paste into other css templates */
