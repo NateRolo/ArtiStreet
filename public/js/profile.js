@@ -252,15 +252,18 @@ document.getElementById("user-posts").addEventListener("click", () => {
     document.getElementById("user-likes").classList.remove("active");
 });
 
+// edit profile button
 document.getElementById("edit-profile").addEventListener("click", () => {
     editProfile();
 })
 
+// original states of page
 const profileHeader = document.getElementById("pfp-container").innerHTML;
 const postContainer = document.getElementById("posts-go-here").innerHTML;
 
 let originalPostContainer = ""; // Global variable to save posts content
 
+// edit profile function
 async function editProfile() {
     const profileHeader = document.getElementById("profileHeader");
     const editButton = document.getElementById("edit-profile");
@@ -317,7 +320,7 @@ async function editProfile() {
         </div>
     `;
 
-    // Add event listener for profile picture click
+    // button for profile picture click
     const currentPfp = document.getElementById("current-pfp");
     const editPfpInput = document.getElementById("edit-pfp");
     const previewPfp = document.getElementById("pfp-preview");
