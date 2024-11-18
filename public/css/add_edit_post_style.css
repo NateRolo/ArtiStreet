@@ -101,6 +101,7 @@ input[type="file"] {
     grid-row: 1;
     cursor: pointer;
     object-fit: contain;
+    max-height: 100%;
 }
 
 /* Desktop navbar styling. Copy and paste into other css templates */
