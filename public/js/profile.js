@@ -456,5 +456,18 @@ async function updateUserPostsUsername(newUsername) {
 const profileButton = document.getElementById("nav-profile");
 profileButton.onload = profileButton.classList.toggle("active");
 
+//Log out button when click it redirect you to login page
+
+document.getElementById('log-out').addEventListener('click', () => {
+    firebase.auth().signOut().then(() => {
+        // Redirect to login page or show a confirmation message
+        window.location.href = './login.html';
+    }).catch((error) => {
+        console.error('Error logging out:', error);
+        alert('Failed to log out. Please try again.');
+    });
+});
+
+
 
 
