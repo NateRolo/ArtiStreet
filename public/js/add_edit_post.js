@@ -152,6 +152,20 @@ saveButton.addEventListener("click", async () => {
     await saveOrUpdatePost(docId);
 });
 
+const cancelEdit = () => {
+    const confirmCancel = confirm("Are you sure you want to cancel? Any unsaved changes will be lost.");
+    if (confirmCancel) {
+        window.location.href = "/html/profile.html"; // Redirect to profile.html
+    }
+};
+
+// Attach to Cancel Button
+const cancelButton = document.getElementById("cancel_button"); // Ensure the button has this ID in your HTML
+if (cancelButton) {
+    cancelButton.addEventListener("click", cancelEdit);
+}
+
+
 // Populate form on page load
 window.addEventListener("DOMContentLoaded", async () => {
     const docId = getQueryParam("docId");
