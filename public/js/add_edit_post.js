@@ -46,12 +46,25 @@ const populatePostForm = async (docId) => {
 
 // Utility Function: Save or Update Post
 const saveOrUpdatePost = async (docId = null) => {
-    const title = titleInput.value.trim();
+    let title = titleInput.value; // Get the raw title input value
+
+    // Trim spaces and update the input visually
+    title = title.trim();
+    titleInput.value = title; // Update the displayed input to reflect trimmed value
+
     const location = locationInput.value.trim();
     const file = imgUpload.files[0];
     const description = descOfPost.value.trim();
 
-    if (!title || !location || (!file && !docId)) {
+    // Validate input fields
+    if (!title) {
+        alert("Title cannot be empty or contain only spaces.");
+        titleInput.style.border = "2px solid red"; // Highlight invalid input
+        return;
+    }
+    titleInput.style.border = ""; // Reset border if valid
+
+    if (!location || (!file && !docId)) {
         alert("Please fill in all required fields.");
         return;
     }
@@ -119,6 +132,7 @@ const saveOrUpdatePost = async (docId = null) => {
         alert("Failed to save the post. Please try again.");
     }
 };
+
 
 // Event Listeners
 imgLabel.addEventListener("click", () => imgUpload.click());
