@@ -229,6 +229,11 @@ body {
 .post-edit-button {
     grid-column: 4;
     grid-row: 2;
+    border-color: none;
+    background-color: rgb(74, 74, 74);
+    color: white;
+    width: 100%;
+    font-size: 0.75em;
 }
 
 /* Navigation tab */
