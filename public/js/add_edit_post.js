@@ -139,6 +139,14 @@ imgUpload.addEventListener("change", () => {
     }
 });
 
+// delete post button
+const deleteButton = document.getElementById("delete_button");
+deleteButton.addEventListener("click", async () => {
+    const docId = getQueryParam("docId"); // Get the post ID from the query string
+    await deletePost(docId);
+});
+
+// save changes button
 saveButton.addEventListener("click", async () => {
     const docId = getQueryParam("docId"); // Check if editing a post
     await saveOrUpdatePost(docId);
@@ -151,3 +159,53 @@ window.addEventListener("DOMContentLoaded", async () => {
         await populatePostForm(docId); // Populate form if editing
     }
 });
+
+// delete post function 
+const deletePost = async (docId) => {
+    if (!docId) {
+        alert("Post ID is missing. Unable to delete post.");
+        return;
+    }
+
+    const confirmDelete = confirm("Are you sure you want to delete this post? This action cannot be undone.");
+    if (!confirmDelete) return;
+
+    try {
+        const user = firebase.auth().currentUser; // Get the current authenticated user
+        if (!user) {
+            alert("You must be logged in to delete a post.");
+            return;
+        }
+
+        const postRef = db.collection("posts").doc(docId);
+        const postDoc = await postRef.get();
+
+        if (!postDoc.exists) {
+            alert("Post not found!");
+            return;
+        }
+
+        const postData = postDoc.data();
+
+        // Check if the current user is the owner of the post
+        if (postData.user.uid !== user.uid) {
+            alert("You are not authorized to delete this post.");
+            return;
+        }
+
+        // Delete the associated image from Firebase Storage, if it exists
+        if (postData.image_URL) {
+            const storageRef = storage.refFromURL(postData.image_URL);
+            await storageRef.delete();
+        }
+
+        // Delete the post document from Firestore
+        await postRef.delete();
+
+        alert("Post deleted successfully!");
+        window.location.href = "/html/Landing.html"; // Redirect to landing page after deletion
+    } catch (error) {
+        console.error("Error deleting post:", error);
+        alert("Failed to delete the post. Please try again.");
+    }
+};

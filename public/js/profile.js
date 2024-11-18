@@ -120,9 +120,17 @@ async function displayPostsDynamically(collection, filterType = "user") {
         // Fetch profile image for the user who created the post
         if (postProfileImageElement) {
             const postUserDoc = await db.collection('users').doc(data.user.uid).get();
-            const postUserProfileImage = postUserDoc.data().profile_picture || '/img/default_profile.png';
-            postProfileImageElement.src = postUserProfileImage;
-        }
+            const postUserProfileImage = postUserDoc.data().profile_picture;
+            if (!postUserProfileImage){
+                postProfileImageElement.src = "/img/profileImage.png";
+            } else {
+                postProfileImageElement.src = postUserProfileImage;
+            }
+                
+            
+        } 
+
+        
 
         // Set like button and like count
         const likeButton = newPost.querySelector('.post-like');
