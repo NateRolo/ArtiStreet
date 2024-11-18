@@ -1,3 +1,4 @@
+// Populate the page with user info and post details
 function displayPictureInfo() {
   let params = new URL(window.location.href);
   let ID = params.searchParams.get("docID");
@@ -11,6 +12,7 @@ function displayPictureInfo() {
         let thisPost = doc.data();
         console.log("Post Data:", thisPost);
 
+        // Post Details
         let postCode = thisPost.image_URL;
         let postName = thisPost.title;
         let user = thisPost.user; // Access the user map from the post document
@@ -28,14 +30,14 @@ function displayPictureInfo() {
 
         // Populate the title, description, time, image, and location
         document.querySelector(".post-title").innerHTML = postName;
-        document.querySelector(".post-description").innerHTML = descOfPost; // Make sure description is displayed
+        document.querySelector(".post-description").innerHTML = descOfPost; 
         document.querySelector(".post-time").innerHTML = formattedTimeString;
         document.querySelector(".post-location").innerHTML = postLocation;
 
         let imgElement = document.querySelector(".post-picture");
         imgElement.src = postCode;
 
-        // Now fetch and display the user's profile picture
+        // Fetch and display the user's profile picture
         db.collection("users")
           .doc(user.uid)
           .get()
@@ -57,8 +59,8 @@ function displayPictureInfo() {
               svgElement.replaceWith(profilePicElement);
 
               // Display username and user handle
-              document.getElementById("user-name").innerHTML = userData.username; // Use username from profile data
-              document.getElementById("user-handle").innerHTML = "@" + userData.userHandle; // Use handle from profile data
+              document.getElementById("user-name").innerHTML = userData.username; 
+              document.getElementById("user-handle").innerHTML = "@" + userData.userHandle; 
             } else {
               console.log("User profile not found.");
             }
@@ -66,6 +68,10 @@ function displayPictureInfo() {
           .catch((error) => {
             console.error("Error fetching user profile:", error);
           });
+
+        // Load comments under the post
+        loadComments(ID);
+
       } else {
         console.log("No such document!");
       }
@@ -77,3 +83,71 @@ function displayPictureInfo() {
 
 displayPictureInfo();
 
+// Load comments under the post
+function loadComments(postId) {
+  const commentsRef = db.collection("comments").where("postId", "==", postId);
+  commentsRef.onSnapshot((snapshot) => {
+    const commentsList = document.getElementById("comments-list");
+    commentsList.innerHTML = "";
+    snapshot.forEach((doc) => {
+      const comment = doc.data();
+      const commentElement = document.createElement("div");
+      commentElement.classList.add("comment");
+      commentElement.innerHTML = `<strong>${comment.username}</strong>: ${comment.text}`;
+      commentsList.appendChild(commentElement);
+    });
+  });
+}
+
+// Post a new comment
+document.getElementById("comment-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const commentText = document.getElementById("comment-text").value;
+  const postId = getPostIdFromURL(); // Get the current post ID dynamically
+
+  // Ensure the user is logged in
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // Fetch additional user data if stored in Firestore
+      db.collection("users")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            const userData = doc.data();
+            const username = userData.username; // Replace with the actual field for username in your Firestore
+
+            // Add the comment to Firestore
+            db.collection("comments")
+              .add({
+                postId: postId,
+                username: username,
+                text: commentText,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+              })
+              .then(() => {
+                console.log("Comment successfully added!");
+                document.getElementById("comment-text").value = ""; // Clear comment input
+              })
+              .catch((error) => {
+                console.error("Error adding comment: ", error);
+              });
+          } else {
+            console.log("User document not found!");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user data: ", error);
+        });
+    } else {
+      console.log("No user is logged in.");
+    }
+  });
+});
+
+// Helper function to get the post ID from URL parameters
+function getPostIdFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("docID"); // Assumes post ID is passed as a query parameter
+}
