@@ -194,3 +194,4 @@ async function toggleLike(postID) {
         console.error("Error updating like status or count:", error);
     }
 }
+

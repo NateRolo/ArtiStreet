@@ -104,6 +104,21 @@ input[type="file"] {
     max-height: 100%;
 }
 
+#bottomNav svg {
+    width: 25px; 
+    height: 25px;
+    color: black;
+}
+
+#bottomNav .nav-link.active {
+    background-color: rgb(91, 91, 91);
+}
+
+#bottomNav .nav-link.active svg {
+    color: whitesmoke;
+}
+
+
 /* Desktop navbar styling. Copy and paste into other css templates */
 #search-button {
     background-color: #7e09f0;

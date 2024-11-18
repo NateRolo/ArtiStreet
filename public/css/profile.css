@@ -14,7 +14,7 @@ body {
 /* Navbar */
 #navbar {
     width: 100%;
-    background: linear-gradient(rgba(202, 152, 251, 1) 35%, rgba(202, 152, 251, 1) 100%);
+    background: linear-gradient(90deg, rgba(0, 212, 255, 1) 0%, rgba(202, 152, 251, 1) 65%, rgba(202, 152, 251, 1) 100%);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -285,6 +285,13 @@ body {
     color: black;
 }
 
+#bottomNav .nav-link.active {
+    background-color: rgb(91, 91, 91);
+}
+
+#bottomNav .nav-link.active svg {
+    color: whitesmoke;
+}
 
 @media (max-width: 700px) {
     #pfp-container {

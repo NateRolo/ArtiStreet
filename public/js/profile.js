@@ -452,4 +452,9 @@ async function updateUserPostsUsername(newUsername) {
     }
 };
 
+// set nav button to active when clicked
+const profileButton = document.getElementById("nav-profile");
+profileButton.onload = profileButton.classList.toggle("active");
+
+
 

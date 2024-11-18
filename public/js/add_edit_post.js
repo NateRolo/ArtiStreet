@@ -223,3 +223,7 @@ const deletePost = async (docId) => {
         alert("Failed to delete the post. Please try again.");
     }
 };
+
+// set nav button to active when clicked
+const navPostButton = document.getElementById("nav-post");
+navPostButton.onload = navPostButton.classList.toggle("active");
