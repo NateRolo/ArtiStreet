@@ -97,9 +97,10 @@ input[type="file"] {
 
 #img-upload-preview {
     width: 100%;
-    height: 100%;
-    
+    display: none;
     grid-row: 1;
+    cursor: pointer;
+    object-fit: contain;
 }
 
 /* Desktop navbar styling. Copy and paste into other css templates */

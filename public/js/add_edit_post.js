@@ -1,35 +1,115 @@
+// Initialize DOM Elements
+const titleInput = document.getElementById("input-title");
+const locationInput = document.getElementById("input-location");
+const descOfPost = document.getElementById("exampleFormControlTextarea1");
+const imgUpload = document.getElementById("img-upload");
+const imgPreview = document.getElementById("img-upload-preview");
+const imgLabel = document.getElementById("img-label");
+const saveButton = document.getElementById("save_button");
 
-document.getElementById("save_button").addEventListener("click", async () => {
-    // Get input values 
-    const titleInput = document.getElementById("input-title");
-    const locationInput = document.getElementById("input-location");
-    const img = document.getElementById("img-upload");
-    const fileLabel = document.getElementById("img-label");
-    const descOfPost = document.getElementById("exampleFormControlTextarea1"); // Description textarea
+// preview image function
+const previewImage = () => {
+    const file = imgUpload.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imgPreview.src = e.target.result;
+            imgPreview.style.display = "block";
+            imgLabel.style.display = "none";
+        };
+        reader.readAsDataURL(file);
+    } else {
+        imgLabel.style.display = "block";
+        imgPreview.style.display = "none";
+    }
+};
 
+
+// input validation 
+const validateInputs = (title, location, file, description) => {
+    let isValid = true;
+
+    if (!title) {
+        titleInput.style.border = "2px solid red";
+        isValid = false;
+    } else {
+        titleInput.style.border = "";
+    }
+
+    if (!location) {
+        locationInput.style.border = "2px solid red";
+        isValid = false;
+    } else {
+        locationInput.style.border = "";
+    }
+
+    if (!file) {
+        imgLabel.style.border = "2px solid red";
+        isValid = false;
+    } else {
+        imgLabel.style.border = "";
+    }
+
+    if (!description) {
+        descOfPost.style.border = "2px solid red";
+        isValid = false;
+    } else {
+        descOfPost.style.border = "";
+    }
+
+    return isValid;
+};
+
+// upload to firebase storage
+const uploadImage = async (file) => {
+    const storageRef = storage.ref(`images/${file.name}`);
+    await storageRef.put(file);
+    return await storageRef.getDownloadURL();
+};
+
+const savePostToFirestore = async (data) => {
+    const postRef = db.collection("posts").doc(); // Generate unique ID
+    await postRef.set(data);
+};
+
+const redirectToLanding = () => {
+    window.location.href = "/html/Landing.html";
+};
+
+// Event Listeners
+imgLabel.addEventListener("click", () => imgUpload.click());
+imgUpload.addEventListener("change", previewImage);
+imgPreview.addEventListener("click", () => {
+    imgUpload.click();
+});
+
+saveButton.addEventListener("click", async () => {
     const title = titleInput.value.trim();
     const location = locationInput.value.trim();
-    const file = img.files[0];
-    const description = descOfPost.value.trim(); // Get the description value
+    const file = imgUpload.files[0];
+    const description = descOfPost.value.trim();
 
-    // Input validation
-    if (!title || !location || !file) {
+    if (!validateInputs(title, location, file, description)) {
         alert("Please fill in all required fields.");
-
-        titleInput.style.border = title ? "" : "2px solid red";
-        locationInput.style.border = location ? "" : "2px solid red";
-        fileLabel.style.border = file ? "" : "2px solid red";
-
         return;
     }
 
-    // User needs to be logged in
+    const locationPattern = /^[^,]+,\s*[^,]+$/;
+    if (!locationPattern.test(location)) {
+        alert("Please enter the location in 'street, city' format.");
+        locationInput.style.border = "2px solid red";
+        return;
+    }
+
+    const [street, city] = location.split(",").map((part) => part.trim());
+
     try {
         const user = firebase.auth().currentUser;
         if (!user) {
             alert("You need to be logged in to post.");
             return;
         }
+
         const userDoc = await db.collection("users").doc(user.uid).get();
         if (!userDoc.exists) {
             alert("User profile not found.");
@@ -37,52 +117,27 @@ document.getElementById("save_button").addEventListener("click", async () => {
         }
 
         const userData = userDoc.data();
-        const username = userData.username;
-        const handle = userData.userHandle;
+        const imageUrl = await uploadImage(file);
 
-        // Split location into city and street
-        const [street, city] = location.split(",").map(part => part.trim());
-
-        // Upload image to Firebase storage
-        const storageRef = storage.ref(`images/${file.name}`);
-        await storageRef.put(file);
-        const imageUrl = await storageRef.getDownloadURL();
-
-        // Users must input location in "street, city" format
-        const locationPattern = /^[^,]+,\s*[^,]+$/;
-
-        if (!locationPattern.test(location)) {
-            alert("Please enter the location in 'street, city' format.");
-            locationInput.style.border = "2px solid red";
-            return; // Exit the function if location format is incorrect
-        } else {
-            locationInput.style.border = ""; // Reset border if format is correct
-        }
-
-        // Create a new post document in Firestore
-        const postRef = db.collection("posts").doc(); // Generate a unique ID for the post
-
-        // Set post data, including description
-        await postRef.set({
-            title: title,
-            city: city,
-            street: street,
+        const postData = {
+            title,
+            city,
+            street,
             image_URL: imageUrl,
             user: {
                 uid: user.uid,
-                username: username,
-                handle: handle
+                username: userData.username,
+                handle: userData.userHandle,
             },
-            description: description, // Store the description
-            time: firebase.firestore.FieldValue.serverTimestamp() // Current server timestamp
-        });
+            description,
+            time: firebase.firestore.FieldValue.serverTimestamp(),
+        };
 
-        // Redirect to the landing page after posting
-        window.location.href = "/html/Landing.html";
-
+        await savePostToFirestore(postData);
+        alert("Post saved successfully!");
+        redirectToLanding();
     } catch (error) {
         console.error("Error saving post:", error);
         alert("Failed to save the post. Please try again.");
     }
 });
-
