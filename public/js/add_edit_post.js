@@ -7,89 +7,51 @@ const imgPreview = document.getElementById("img-upload-preview");
 const imgLabel = document.getElementById("img-label");
 const saveButton = document.getElementById("save_button");
 
-// preview image function
-const previewImage = () => {
-    const file = imgUpload.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            imgPreview.src = e.target.result;
+// Utility Function: Get Query String Parameter
+const getQueryParam = (param) => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(param);
+};
+
+// Utility Function: Populate Post Info
+const populatePostForm = async (docId) => {
+    try {
+        const postDoc = await db.collection("posts").doc(docId).get();
+        if (!postDoc.exists) {
+            alert("Post not found!");
+            return;
+        }
+
+        const postData = postDoc.data();
+
+        // Populate form fields
+        titleInput.value = postData.title || "";
+        locationInput.value = `${postData.street || ""}, ${postData.city || ""}`;
+        descOfPost.value = postData.description || "";
+
+        // Populate image preview
+        if (postData.image_URL) {
+            imgPreview.src = postData.image_URL;
             imgPreview.style.display = "block";
             imgLabel.style.display = "none";
-        };
-        reader.readAsDataURL(file);
-    } else {
-        imgLabel.style.display = "block";
-        imgPreview.style.display = "none";
+        } else {
+            imgLabel.style.display = "block";
+            imgPreview.style.display = "none";
+        }
+    } catch (error) {
+        console.error("Error fetching post data:", error);
+        alert("Failed to load post details.");
     }
 };
 
-
-// input validation 
-const validateInputs = (title, location, file, description) => {
-    let isValid = true;
-
-    if (!title) {
-        titleInput.style.border = "2px solid red";
-        isValid = false;
-    } else {
-        titleInput.style.border = "";
-    }
-
-    if (!location) {
-        locationInput.style.border = "2px solid red";
-        isValid = false;
-    } else {
-        locationInput.style.border = "";
-    }
-
-    if (!file) {
-        imgLabel.style.border = "2px solid red";
-        isValid = false;
-    } else {
-        imgLabel.style.border = "";
-    }
-
-    if (!description) {
-        descOfPost.style.border = "2px solid red";
-        isValid = false;
-    } else {
-        descOfPost.style.border = "";
-    }
-
-    return isValid;
-};
-
-// upload to firebase storage
-const uploadImage = async (file) => {
-    const storageRef = storage.ref(`images/${file.name}`);
-    await storageRef.put(file);
-    return await storageRef.getDownloadURL();
-};
-
-const savePostToFirestore = async (data) => {
-    const postRef = db.collection("posts").doc(); // Generate unique ID
-    await postRef.set(data);
-};
-
-const redirectToLanding = () => {
-    window.location.href = "/html/Landing.html";
-};
-
-// Event Listeners
-imgLabel.addEventListener("click", () => imgUpload.click());
-imgUpload.addEventListener("change", previewImage);
-imgPreview.addEventListener("click", () => {
-    imgUpload.click();
-});
-
-saveButton.addEventListener("click", async () => {
+// Utility Function: Save or Update Post
+const saveOrUpdatePost = async (docId = null) => {
     const title = titleInput.value.trim();
     const location = locationInput.value.trim();
     const file = imgUpload.files[0];
     const description = descOfPost.value.trim();
 
-    if (!validateInputs(title, location, file, description)) {
+    if (!title || !location || (!file && !docId)) {
         alert("Please fill in all required fields.");
         return;
     }
@@ -117,7 +79,14 @@ saveButton.addEventListener("click", async () => {
         }
 
         const userData = userDoc.data();
-        const imageUrl = await uploadImage(file);
+        let imageUrl = imgPreview.src; // Use existing image by default
+
+        if (file) {
+            // Upload new image if provided
+            const storageRef = storage.ref(`images/${file.name}`);
+            await storageRef.put(file);
+            imageUrl = await storageRef.getDownloadURL();
+        }
 
         const postData = {
             title,
@@ -133,11 +102,52 @@ saveButton.addEventListener("click", async () => {
             time: firebase.firestore.FieldValue.serverTimestamp(),
         };
 
-        await savePostToFirestore(postData);
-        alert("Post saved successfully!");
-        redirectToLanding();
+        if (docId) {
+            // Update existing post
+            await db.collection("posts").doc(docId).update(postData);
+            alert("Post updated successfully!");
+        } else {
+            // Create new post
+            const postRef = db.collection("posts").doc();
+            await postRef.set(postData);
+            alert("Post saved successfully!");
+        }
+
+        window.location.href = "/html/Landing.html";
     } catch (error) {
-        console.error("Error saving post:", error);
+        console.error("Error saving/updating post:", error);
         alert("Failed to save the post. Please try again.");
+    }
+};
+
+// Event Listeners
+imgLabel.addEventListener("click", () => imgUpload.click());
+imgPreview.addEventListener("click", () => imgUpload.click());
+imgUpload.addEventListener("change", () => {
+    const file = imgUpload.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imgPreview.src = e.target.result;
+            imgPreview.style.display = "block";
+            imgLabel.style.display = "none";
+        };
+        reader.readAsDataURL(file);
+    } else {
+        imgLabel.style.display = "block";
+        imgPreview.style.display = "none";
+    }
+});
+
+saveButton.addEventListener("click", async () => {
+    const docId = getQueryParam("docId"); // Check if editing a post
+    await saveOrUpdatePost(docId);
+});
+
+// Populate form on page load
+window.addEventListener("DOMContentLoaded", async () => {
+    const docId = getQueryParam("docId");
+    if (docId) {
+        await populatePostForm(docId); // Populate form if editing
     }
 });

@@ -346,14 +346,14 @@ async function editProfile() {
         }
     });
 
-    // Allow user to re-select the current profile picture if needed
+    // reselect image if needed
     previewPfp.addEventListener("click", () => {
         editPfpInput.click(); // Open file picker when clicking the preview picture
     });
 
 
 
-    // Event Listener: Save profile
+    // save profile button
     document.getElementById("save-profile").addEventListener("click", async () => {
         const confirmSave = confirm("Are you sure you want to save your changes?");
         const newUsername = document.getElementById("edit-username").value;

@@ -100,6 +100,9 @@ async function displayPostsDynamically(collection, type = "all") {
             likeCountElement.innerText = `${likesCount} like${likesCount !== 1 ? 's' : ''}`;
         }
 
+
+        
+
         // Display time ago
         const timeElement = newpost.querySelector('.post-time');
         if (time && timeElement) {
@@ -111,6 +114,7 @@ async function displayPostsDynamically(collection, type = "all") {
         document.getElementById(collection + "-go-here").appendChild(newpost);
     });
 }
+
 
 
 firebase.auth().onAuthStateChanged((user) => {
