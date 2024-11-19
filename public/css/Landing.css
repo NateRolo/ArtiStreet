@@ -100,38 +100,9 @@ body {
     grid-row: 3;
 }
 
-#edit-profile {
-    font-size: 0.8em;
-    border: none;
-    background-color: rgb(46, 0, 91);
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    grid-column: 2;
-}
-
-#edit-profile:hover {
-    background-color: #0056b3;
-}
-
-#log-out {
-    font-size: 0.8em;
-    border: none;
-    background-color: rgb(46, 0, 91);
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 5px; /* Add spacing below Edit Profile button */
-    grid-column: 2;
-}
-
-#log-out:hover {
-    background-color: rgb(34, 3, 66);
-}
-
 
 /* Posts container */
-#posts-container {
+.posts-container {
     display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
