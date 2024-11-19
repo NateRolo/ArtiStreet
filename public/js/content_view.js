@@ -150,4 +150,4 @@ document.getElementById("comment-form").addEventListener("submit", function (e) 
 function getPostIdFromURL() {
   const params = new URLSearchParams(window.location.search);
   return params.get("docID"); // Assumes post ID is passed as a query parameter
-}
+} 
