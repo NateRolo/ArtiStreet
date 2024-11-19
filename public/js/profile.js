@@ -5,6 +5,8 @@ const getQueryParam = (param) => {
 };
 
 
+
+
 // Populate Profile Header
 async function displayUserProfile(userId) {
     try {
@@ -14,13 +16,15 @@ async function displayUserProfile(userId) {
             return;
         }
 
-        const { username, userHandle, bio, profile_picture } = userDoc.data();
+        const { username, userHandle, bio, profile_picture, userID } = userDoc.data();
 
         // Populate profile details
         document.getElementById("user-name").innerText = username || "Unknown User";
         document.getElementById("user-handle").innerText = userHandle ? `@${userHandle}` : "@unknown";
         document.getElementById("user-bio").innerText = bio || "No bio available.";
         document.getElementById("pfp").src = profile_picture || "/img/profileImage.png";
+
+       
 
         // Hide edit profile and log out button if this is not the current user's profile
         const currentUser = firebase.auth().currentUser;
@@ -37,6 +41,67 @@ async function displayUserProfile(userId) {
         alert("Failed to load user profile.");
     }
 }
+
+// Function to set user ID to data-user-id
+function setOwnUserId(userId) {
+    const navProfileButton = document.getElementById("nav-profile");
+    if (navProfileButton) {
+        navProfileButton.setAttribute("data-user-id", userId);
+        console.log(`Set data-user-id to: ${userId}`);
+    } else {
+        console.error("nav-profile button not found!");
+    }
+}
+
+// Fetch user ID from Firebase
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        const userId = user.uid; // Get the current user's ID
+        setOwnUserId(userId);   // Set user ID as data-user-id
+    } else {
+        console.error("User not logged in.");
+    }
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const navProfileButton = document.getElementById("nav-profile");
+
+    // Check if the button exists
+    if (!navProfileButton) {
+        console.error("nav-profile button not found!");
+        return;
+    }
+
+    // Function to handle setting the active class and adding the click listener
+    const handleUserIdUpdate = () => {
+        const currentUserIdParam = new URLSearchParams(window.location.search).get("userId");
+        const ownUserId = navProfileButton.getAttribute("data-user-id"); // Get updated userId
+        console.log("Current User ID Param:", currentUserIdParam);
+        console.log("Own User ID:", ownUserId);
+
+        if (currentUserIdParam === ownUserId) {
+            navProfileButton.classList.toggle("active");
+        }
+
+        // Add event listener for redirecting to the user's own profile page
+        navProfileButton.addEventListener("click", () => {
+            window.location.href = `profile.html?userId=${ownUserId}`;
+        });
+    };
+
+    // Observe changes to the data-user-id attribute
+    const observer = new MutationObserver(() => {
+        if (navProfileButton.getAttribute("data-user-id")) {
+            handleUserIdUpdate();
+            observer.disconnect(); // Stop observing once the attribute is set
+        }
+    });
+
+    // Start observing the navProfileButton for attribute changes
+    observer.observe(navProfileButton, { attributes: true, attributeFilter: ["data-user-id"] });
+});
+
 
 // Display User's Posts
 async function displayUserPosts(userId) {
@@ -105,7 +170,6 @@ function timeAgo(date) {
 async function initializeProfilePage() {
     const userId = getQueryParam("userId"); // Get the userId from query string
     if (!userId) {
-       
         const currentUser = firebase.auth().currentUser;
         if (currentUser) {
             window.location.href = `profile.html?userId=${currentUser.uid}`;
@@ -180,6 +244,3 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
-// set nav button to active when clicked
-const profileButton = document.getElementById("nav-profile");
-profileButton.onload = profileButton.classList.toggle("active");
