@@ -63,7 +63,7 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
-
+// Differentiate between viewing own profile vs other users
 document.addEventListener("DOMContentLoaded", () => {
     const navProfileButton = document.getElementById("nav-profile");
 
