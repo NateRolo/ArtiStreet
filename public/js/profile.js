@@ -52,6 +52,8 @@ async function displayUserInfo() {
                 }
                 if (pfp != null) {
                     document.getElementById("pfp").src = pfp;
+                } else {
+                    document.getElementById("pfp").src = "/img/profileImage.png";
                 }
 
             })
