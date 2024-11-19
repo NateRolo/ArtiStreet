@@ -213,3 +213,6 @@ async function toggleLike(postID) {
     }
 }
 
+// set nav button to active when clicked
+const homeButton = document.getElementById("nav-home");
+homeButton.onload = homeButton.classList.toggle("active");

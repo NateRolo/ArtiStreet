@@ -111,7 +111,7 @@ body {
 }
 
 #edit-profile:hover {
-    background-color: #0056b3;
+    background-color: #8115fc;
 }
 
 #log-out {
@@ -121,7 +121,7 @@ body {
     color: white;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 5px; /* Add spacing below Edit Profile button */
+    margin-top: 5px; 
     grid-column: 2;
 }
 
