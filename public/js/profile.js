@@ -4,6 +4,7 @@ const getQueryParam = (param) => {
     return params.get(param);
 };
 
+
 // Populate Profile Header
 async function displayUserProfile(userId) {
     try {
@@ -98,11 +99,13 @@ function timeAgo(date) {
     return "just now";
 }
 
+
+
 // Initialize Profile Page
 async function initializeProfilePage() {
     const userId = getQueryParam("userId"); // Get the userId from query string
     if (!userId) {
-        alert("No user specified. Redirecting to your profile.");
+       
         const currentUser = firebase.auth().currentUser;
         if (currentUser) {
             window.location.href = `profile.html?userId=${currentUser.uid}`;
@@ -166,6 +169,7 @@ async function editProfile() {
         </div>
     `;
 }
+
 
 // Initialize Page on Load
 firebase.auth().onAuthStateChanged((user) => {
