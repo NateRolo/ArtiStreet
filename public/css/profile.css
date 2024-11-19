@@ -161,6 +161,8 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     background-color: white;
     margin-bottom: 20px;
+    width: 100%;
+    
 }
 
 /* Post Top Bar */
@@ -334,6 +336,7 @@ body {
 
     .post-card {
         max-width: 100%;
+        width: 100%;
     }
 
 
