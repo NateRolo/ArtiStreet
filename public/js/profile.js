@@ -97,7 +97,7 @@ async function displayPostsDynamically(collection, filterType = "user") {
         const likesCount = data.likesCount || 0;
         const newPost = cardTemplate.content.cloneNode(true);
         const imgURL = data.image_URL;
-
+        
         const postPictureElement = newPost.querySelector('.post-picture');
         const postTitleElement = newPost.querySelector('.post-title');
         const postUserElement = newPost.querySelector('.post-user');
@@ -126,8 +126,6 @@ async function displayPostsDynamically(collection, filterType = "user") {
             } else {
                 postProfileImageElement.src = postUserProfileImage;
             }
-                
-            
         } 
 
         
