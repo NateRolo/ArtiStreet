@@ -58,17 +58,18 @@ body {
     background-color: white;
     border-radius: 50%;
     width: 80%;
+    
     align-items: center;
     justify-items: center;
     grid-column: 1;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 #pfp {
     width: 80%;
-    height: auto;
+    height: 80%;
     border-radius: 50%;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 #text {

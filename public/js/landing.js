@@ -60,12 +60,12 @@ async function displayPostsDynamically(collection, type = "all") {
         const docID = doc.id;
         const likesCount = data.likesCount || 0;
         const userID = data.user?.uid;
-    
-        
-    
+
+
+
         let pfp = "/img/profileImage.png"; // Default profile picture
         // fetch user profile img
-        if (userID) { 
+        if (userID) {
             try {
                 const userDoc = await db.collection('users').doc(userID).get();
                 pfp = userDoc.exists && userDoc.data().profile_picture ? userDoc.data().profile_picture : pfp;
@@ -73,38 +73,41 @@ async function displayPostsDynamically(collection, type = "all") {
                 console.error(`Error fetching user document for userID: ${userID}`, error);
             }
         }
-    
-    
-    
+
+
+
         const newpost = cardTemplate.content.cloneNode(true);
-    
+
         // Set image, title, location, and username
         const postPictureElement = newpost.querySelector('.post-picture');
         const postTitleElement = newpost.querySelector('.post-title');
         const postProfilePictureElement = newpost.querySelector('.profileIcon');
-    
+
         if (postPictureElement && imgURL) {
             postPictureElement.src = imgURL;
             postPictureElement.onclick = () => {
                 window.location.href = `content_view.html?docID=${docID}`;
             };
         }
-    
+
         if (postTitleElement) {
             postTitleElement.innerHTML = title;
             postTitleElement.onclick = () => {
                 window.location.href = `content_view.html?docID=${docID}`;
             };
         }
-        
+
         // set profile image
         if (postProfilePictureElement) {
             postProfilePictureElement.src = pfp;
         }
-    
+
         newpost.querySelector('.post-user').innerHTML = userName;
+        newpost.querySelector('.post-user').setAttribute("data-user-id", userID);
+        newpost.querySelector('.profileIcon').setAttribute("data-user-id", userID);
         newpost.querySelector('.post-location').innerHTML = location;
-    
+
+
         // Set like button and like count
         const likeButton = newpost.querySelector('.post-like');
         const likeCountElement = newpost.querySelector('.post-like-count');
@@ -121,7 +124,7 @@ async function displayPostsDynamically(collection, type = "all") {
             likeCountElement.id = 'like-count-' + docID;
             likeCountElement.innerText = `${likesCount} like${likesCount !== 1 ? 's' : ''}`;
         }
-    
+
         // Display time ago
         const timeElement = newpost.querySelector('.post-time');
         if (time && timeElement) {
@@ -129,7 +132,7 @@ async function displayPostsDynamically(collection, type = "all") {
         } else {
             timeElement.innerHTML = "Unknown time";
         }
-    
+
         document.getElementById(collection + "-go-here").appendChild(newpost);
     });
 
@@ -216,3 +219,23 @@ async function toggleLike(postID) {
 // set nav button to active when clicked
 const homeButton = document.getElementById("nav-home");
 homeButton.onload = homeButton.classList.toggle("active");
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Use event delegation on the document or a common parent container
+    document.body.addEventListener("click", (event) => {
+        // Check if the clicked element has the class "post-user" or "profileIcon"
+        if (event.target.classList.contains("post-user") || event.target.classList.contains("profileIcon")) {
+            const userId = event.target.getAttribute("data-user-id"); // Get userId from data attribute
+            if (userId) {
+                window.location.href = `profile.html?userId=${userId}`;
+            } else {
+                alert("User ID not found. Cannot redirect to profile.");
+            }
+        }
+    });
+});
+
+
