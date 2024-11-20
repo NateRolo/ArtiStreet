@@ -88,7 +88,6 @@ function displayPictureInfo() {
 displayPictureInfo();
 
 // Load comments for a specific post
-// Load comments under the post with profile pictures
 function loadComments(postId) {
   const commentsRef = db.collection("comments").where("postId", "==", postId);
 
@@ -98,7 +97,7 @@ function loadComments(postId) {
       commentsList.innerHTML = ""; // Clear existing comments
 
       snapshot.forEach((doc) => {
-        const { username, text, profile_picture } = doc.data();
+        const { username, text, profile_picture, userId } = doc.data();
 
         // Create comment container
         const commentElement = document.createElement("div");
@@ -119,9 +118,41 @@ function loadComments(postId) {
         commentText.classList.add("comment-text");
         commentText.innerHTML = `<strong>${username}</strong>: ${text}`;
 
-        // Append profile image and text to the comment element
+        // Add trash icon
+        const trashIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        trashIcon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+        trashIcon.setAttribute("width", "16");
+        trashIcon.setAttribute("height", "16");
+        trashIcon.setAttribute("fill", "currentColor");
+        trashIcon.setAttribute("class", "bi bi-trash");
+        trashIcon.setAttribute("viewBox", "0 0 16 16");
+
+        trashIcon.innerHTML = `
+          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+          <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+        `;
+        trashIcon.style.cursor = "pointer"; // Make the icon interactive
+
+        // Event listener for deleting comments only for the user who made the comment
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user && user.uid === userId) { // Only allow deletion if the user is the author
+            trashIcon.addEventListener("click", () => {
+              db.collection("comments").doc(doc.id).delete().then(() => {
+                console.log("Comment deleted successfully.");
+              }).catch((error) => {
+                console.error("Error deleting comment: ", error);
+              });
+            });
+          } else {
+            // Hide or disable the trash icon for users who didn't post the comment
+            trashIcon.style.display = "none";
+          }
+        });
+
+        // Append profile image, text, and trash icon to the comment element
         commentElement.appendChild(profileImg);
         commentElement.appendChild(commentText);
+        commentElement.appendChild(trashIcon);
 
         // Append the comment element to the comments list
         commentsList.appendChild(commentElement);
@@ -158,6 +189,7 @@ document.getElementById("comment-form").addEventListener("submit", function (e) 
                 username: username,
                 text: commentText,
                 profile_picture: profile_picture || "img/default-profile-pic.png", // Default fallback
+                userId: user.uid, // Store the user ID for deletion authorization
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
               })
               .then(() => {
@@ -183,5 +215,5 @@ document.getElementById("comment-form").addEventListener("submit", function (e) 
 // Helper function to get the post ID from URL parameters
 function getPostIdFromURL() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("docID"); // Assumes post ID is passed as a query parameter
+  return params.get("docID"); // Assumes post ID is passed as a query parameter named 'docID'
 }

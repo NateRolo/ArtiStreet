@@ -349,20 +349,34 @@ button[type="submit"]:hover {
 .comment-item {
     display: flex;
     align-items: center;
+    justify-content: space-between; /* Push text to the left and icon to the right */
     margin-bottom: 15px;
-  }
-  
-  .comment-profile-img {
-    display: inline-block;
+    width: 100%;
+}
+
+.comment-profile-img {
     border-radius: 50%;
     object-fit: cover;
-  }
-  
-  .comment-text {
-    display: inline-block;
-    font-size: 14px;
-  }
-  
+}
+
+.comment-text {
+    flex-grow: 1; /* Take up available space between the image and the icon */
+    margin-left: 10px;
+}
+
+.bi-trash {
+    cursor: pointer; /* Indicates interactivity */
+    color: #888; /* Optional: Default color for the trash icon */
+    transition: color 0.3s;
+    height: 40px;
+    width: 40px;
+}
+
+.bi-trash:hover {
+    color: red; /* Optional: Highlight color on hover */
+}
+
+
 
 @media screen and (max-width: 768px) {
 
