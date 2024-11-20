@@ -208,6 +208,7 @@ body {
 }
 
 .post-like-count {
+    transform: translateY(5px);
     font-size: 0.8em;
     color: gray;
     grid-column: 3;
@@ -318,8 +319,8 @@ body {
 
     .post-like,
     .post-kebab {
-        width: 18px;
-        height: 18px;
+        width: 30px;
+        height: 30px;
     }
 
     .post-title,
