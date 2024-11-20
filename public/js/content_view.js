@@ -68,7 +68,8 @@ function displayPictureInfo() {
 
             // Display username and user handle
             document.getElementById("user-name").innerHTML = username;
-            document.getElementById("user-handle").innerHTML = `@${handle}`;
+            document.getElementById("user-handle").innerHTML = `@${user.handle || "Unknown"}`;
+
           })
           .catch((error) => {
             console.error("Error fetching user profile:", error);
@@ -217,3 +218,5 @@ function getPostIdFromURL() {
   const params = new URLSearchParams(window.location.search);
   return params.get("docID"); // Assumes post ID is passed as a query parameter named 'docID'
 }
+
+
