@@ -1,102 +1,136 @@
 // Populate the page with user info and post details
 function displayPictureInfo() {
-  let params = new URL(window.location.href);
-  let ID = params.searchParams.get("docID");
+  const params = new URL(window.location.href);
+  const ID = params.searchParams.get("docID");
+
+  if (!ID) {
+    console.error("No post ID found in the URL.");
+    return;
+  }
+
   console.log("Post ID:", ID);
 
   db.collection("posts")
     .doc(ID)
     .get()
     .then((doc) => {
-      if (doc.exists) {
-        let thisPost = doc.data();
-        console.log("Post Data:", thisPost);
+      if (!doc.exists) {
+        console.error("No such post document!");
+        return;
+      }
 
-        // Post Details
-        let postCode = thisPost.image_URL;
-        let postName = thisPost.title;
-        let user = thisPost.user; // Access the user map from the post document
-        let userName = user.username; // Access username from the user map
-        let userHandle = user.handle; // Access handle from the user map
-        let descOfPost = thisPost.description || ""; // Get description from the post document
-        let postCity = thisPost.city;
-        let postStreet = thisPost.street;
-        let postTime = thisPost.time;
+      const thisPost = doc.data();
+      console.log("Post Data:", thisPost);
 
-        let postLocation = `${postCity}, ${postStreet}`;
+      const {
+        image_URL: postCode,
+        title: postName,
+        user,
+        description: descOfPost = "",
+        city: postCity,
+        street: postStreet,
+        time: postTime,
+      } = thisPost;
 
-        let formattedTime = postTime.toDate();
-        let formattedTimeString = formattedTime.toLocaleString();
+      const postLocation = `${postCity}, ${postStreet}`;
+      const formattedTimeString = postTime.toDate().toLocaleString();
 
-        // Populate the title, description, time, image, and location
-        document.querySelector(".post-title").innerHTML = postName;
-        document.querySelector(".post-description").innerHTML = descOfPost; 
-        document.querySelector(".post-time").innerHTML = formattedTimeString;
-        document.querySelector(".post-location").innerHTML = postLocation;
+      // Populate the title, description, time, image, and location
+      document.querySelector(".post-title").innerHTML = postName;
+      document.querySelector(".post-description").innerHTML = descOfPost;
+      document.querySelector(".post-time").innerHTML = formattedTimeString;
+      document.querySelector(".post-location").innerHTML = postLocation;
+      document.querySelector(".post-picture").src = postCode;
 
-        let imgElement = document.querySelector(".post-picture");
-        imgElement.src = postCode;
-
-        // Fetch and display the user's profile picture
+      // Fetch and display the user's profile picture
+      if (user?.uid) {
         db.collection("users")
           .doc(user.uid)
           .get()
           .then((userDoc) => {
-            if (userDoc.exists) {
-              const userData = userDoc.data();
-              const profilePic = userData.profile_picture || "default-profile-pic-url.png"; // Default fallback
-
-              // Replace the SVG with the profile picture
-              const profilePicElement = document.createElement("img");
-              profilePicElement.src = profilePic;
-              profilePicElement.alt = `${userName}'s Profile Picture`;
-              profilePicElement.classList.add("profile-picture");
-              profilePicElement.style.width = "50px"; // Adjust size as needed
-              profilePicElement.style.height = "50px"; // Adjust size as needed
-              profilePicElement.style.borderRadius = "50%";
-
-              const svgElement = document.querySelector(".bi-person-circle");
-              svgElement.replaceWith(profilePicElement);
-
-              // Display username and user handle
-              document.getElementById("user-name").innerHTML = userData.username; 
-              document.getElementById("user-handle").innerHTML = "@" + userData.userHandle; 
-            } else {
-              console.log("User profile not found.");
+            if (!userDoc.exists) {
+              console.warn("User profile not found.");
+              return;
             }
+
+            const { profile_picture: profilePic = "default-profile-pic-url.png", username, handle } = userDoc.data();
+
+            // Replace the SVG with the profile picture
+            const profilePicElement = document.createElement("img");
+            profilePicElement.src = profilePic;
+            profilePicElement.alt = `${username}'s Profile Picture`;
+            profilePicElement.classList.add("profile-picture");
+            profilePicElement.style.width = "50px";
+            profilePicElement.style.height = "50px";
+            profilePicElement.style.borderRadius = "50%";
+
+            document.querySelector(".bi-person-circle").replaceWith(profilePicElement);
+
+            // Display username and user handle
+            document.getElementById("user-name").innerHTML = username;
+            document.getElementById("user-handle").innerHTML = `@${handle}`;
           })
           .catch((error) => {
             console.error("Error fetching user profile:", error);
           });
-
-        // Load comments under the post
-        loadComments(ID);
-
       } else {
-        console.log("No such document!");
+        console.warn("No user data found in the post document.");
       }
+
+      // Load comments for this post
+      loadComments(ID);
     })
     .catch((error) => {
-      console.log("Error getting document:", error);
+      console.error("Error fetching post document:", error);
     });
 }
 
 displayPictureInfo();
 
-// Load comments under the post
+// Load comments for a specific post
+// Load comments under the post with profile pictures
 function loadComments(postId) {
   const commentsRef = db.collection("comments").where("postId", "==", postId);
-  commentsRef.onSnapshot((snapshot) => {
-    const commentsList = document.getElementById("comments-list");
-    commentsList.innerHTML = "";
-    snapshot.forEach((doc) => {
-      const comment = doc.data();
-      const commentElement = document.createElement("div");
-      commentElement.classList.add("comment");
-      commentElement.innerHTML = `<strong>${comment.username}</strong>: ${comment.text}`;
-      commentsList.appendChild(commentElement);
-    });
-  });
+
+  commentsRef.onSnapshot(
+    (snapshot) => {
+      const commentsList = document.getElementById("comments-list");
+      commentsList.innerHTML = ""; // Clear existing comments
+
+      snapshot.forEach((doc) => {
+        const { username, text, profile_picture } = doc.data();
+
+        // Create comment container
+        const commentElement = document.createElement("div");
+        commentElement.classList.add("comment-item");
+
+        // Add profile image
+        const profileImg = document.createElement("img");
+        profileImg.src = profile_picture || "img/default-profile-pic.png"; // Default fallback
+        profileImg.alt = `${username}'s Profile Picture`;
+        profileImg.classList.add("comment-profile-img");
+        profileImg.style.width = "40px";
+        profileImg.style.height = "40px";
+        profileImg.style.borderRadius = "50%";
+        profileImg.style.marginRight = "10px";
+
+        // Add comment text
+        const commentText = document.createElement("div");
+        commentText.classList.add("comment-text");
+        commentText.innerHTML = `<strong>${username}</strong>: ${text}`;
+
+        // Append profile image and text to the comment element
+        commentElement.appendChild(profileImg);
+        commentElement.appendChild(commentText);
+
+        // Append the comment element to the comments list
+        commentsList.appendChild(commentElement);
+      });
+    },
+    (error) => {
+      console.error("Error loading comments:", error);
+    }
+  );
 }
 
 // Post a new comment
@@ -115,8 +149,7 @@ document.getElementById("comment-form").addEventListener("submit", function (e) 
         .get()
         .then((doc) => {
           if (doc.exists) {
-            const userData = doc.data();
-            const username = userData.username; // Replace with the actual field for username in your Firestore
+            const { username, profile_picture } = doc.data();
 
             // Add the comment to Firestore
             db.collection("comments")
@@ -124,6 +157,7 @@ document.getElementById("comment-form").addEventListener("submit", function (e) 
                 postId: postId,
                 username: username,
                 text: commentText,
+                profile_picture: profile_picture || "img/default-profile-pic.png", // Default fallback
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
               })
               .then(() => {
@@ -138,7 +172,7 @@ document.getElementById("comment-form").addEventListener("submit", function (e) 
           }
         })
         .catch((error) => {
-          console.error("Error fetching user data: ", error);
+          console.error("Error fetching user data:", error);
         });
     } else {
       console.log("No user is logged in.");
@@ -150,4 +184,4 @@ document.getElementById("comment-form").addEventListener("submit", function (e) 
 function getPostIdFromURL() {
   const params = new URLSearchParams(window.location.search);
   return params.get("docID"); // Assumes post ID is passed as a query parameter
-} 
+}

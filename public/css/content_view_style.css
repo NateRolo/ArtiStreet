@@ -334,6 +334,36 @@ button[type="submit"]:hover {
     background-color: #4a74ab;
 }
 
+.card2 {
+    display: block; /* Ensures the card itself behaves as a block */
+    padding: 10px;
+    background-color: #f9f9f9; /* Optional: Background for the card */
+}
+
+.card-body2 {
+    display: flex;
+    flex-direction: column; /* Stack comments vertically */
+    gap: 15px; /* Space between comments */
+}
+
+.comment-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .comment-profile-img {
+    display: inline-block;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .comment-text {
+    display: inline-block;
+    font-size: 14px;
+  }
+  
+
 @media screen and (max-width: 768px) {
 
     /* Adjust for smaller screens */
