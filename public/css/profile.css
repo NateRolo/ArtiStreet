@@ -249,6 +249,7 @@ body {
 
 .post-like-count {
     font-size: 0.8em;
+    transform: translateY(5px);
     color: gray;
     grid-column: 3;
     grid-row: 1;
@@ -262,7 +263,10 @@ body {
     color: white;
     width: 100%;
     font-size: 0.75em;
+    border-radius: 10px;
+    margin-left: -2px; /* Adjust the value as needed */
 }
+
 
 /* Navigation tab */
 #nav-tab {
@@ -358,8 +362,8 @@ body {
 
     .post-like,
     .post-kebab {
-        width: 18px;
-        height: 18px;
+        width: 30px;
+        height: 30px;
     }
 
     .post-title,
