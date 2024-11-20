@@ -53,11 +53,16 @@ function displayPictureInfo() {
               return;
             }
 
-            const { profile_picture: profilePic = "default-profile-pic-url.png", username, handle } = userDoc.data();
+            const { profile_picture: profilePic, username, handle } = userDoc.data();
 
-            // Replace the SVG with the profile picture
+            // Replace the SVG with the profile picture or fallback image
             const profilePicElement = document.createElement("img");
-            profilePicElement.src = profilePic;
+            if (!profilePic) {
+              profilePicElement.src = "/img/profileImage.png"; // Fallback image
+            } else {
+              profilePicElement.src = profilePic; // User's profile image
+            }
+
             profilePicElement.alt = `${username}'s Profile Picture`;
             profilePicElement.classList.add("profile-picture");
             profilePicElement.style.width = "50px";
@@ -68,8 +73,7 @@ function displayPictureInfo() {
 
             // Display username and user handle
             document.getElementById("user-name").innerHTML = username;
-            document.getElementById("user-handle").innerHTML = `@${user.handle || "Unknown"}`;
-
+            document.getElementById("user-handle").innerHTML = `@${handle || "Unknown"}`;
           })
           .catch((error) => {
             console.error("Error fetching user profile:", error);
@@ -87,6 +91,7 @@ function displayPictureInfo() {
 }
 
 displayPictureInfo();
+
 
 // Load comments for a specific post
 function loadComments(postId) {
@@ -120,7 +125,10 @@ function loadComments(postId) {
         commentText.innerHTML = `<strong>${username}</strong>: ${text}`;
 
         // Add trash icon
-        const trashIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        const trashIcon = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "svg"
+        );
         trashIcon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
         trashIcon.setAttribute("width", "16");
         trashIcon.setAttribute("height", "16");
@@ -136,13 +144,18 @@ function loadComments(postId) {
 
         // Event listener for deleting comments only for the user who made the comment
         firebase.auth().onAuthStateChanged((user) => {
-          if (user && user.uid === userId) { // Only allow deletion if the user is the author
+          if (user && user.uid === userId) {
+            // Only allow deletion if the user is the author
             trashIcon.addEventListener("click", () => {
-              db.collection("comments").doc(doc.id).delete().then(() => {
-                console.log("Comment deleted successfully.");
-              }).catch((error) => {
-                console.error("Error deleting comment: ", error);
-              });
+              db.collection("comments")
+                .doc(doc.id)
+                .delete()
+                .then(() => {
+                  console.log("Comment deleted successfully.");
+                })
+                .catch((error) => {
+                  console.error("Error deleting comment: ", error);
+                });
             });
           } else {
             // Hide or disable the trash icon for users who didn't post the comment
@@ -166,57 +179,58 @@ function loadComments(postId) {
 }
 
 // Post a new comment
-document.getElementById("comment-form").addEventListener("submit", function (e) {
-  e.preventDefault();
+document
+  .getElementById("comment-form")
+  .addEventListener("submit", function (e) {
+    e.preventDefault();
 
-  const commentText = document.getElementById("comment-text").value;
-  const postId = getPostIdFromURL(); // Get the current post ID dynamically
+    const commentText = document.getElementById("comment-text").value;
+    const postId = getPostIdFromURL(); // Get the current post ID dynamically
 
-  // Ensure the user is logged in
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      // Fetch additional user data if stored in Firestore
-      db.collection("users")
-        .doc(user.uid)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            const { username, profile_picture } = doc.data();
+    // Ensure the user is logged in
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // Fetch additional user data if stored in Firestore
+        db.collection("users")
+          .doc(user.uid)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              const { username, profile_picture } = doc.data();
 
-            // Add the comment to Firestore
-            db.collection("comments")
-              .add({
-                postId: postId,
-                username: username,
-                text: commentText,
-                profile_picture: profile_picture || "img/default-profile-pic.png", // Default fallback
-                userId: user.uid, // Store the user ID for deletion authorization
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-              })
-              .then(() => {
-                console.log("Comment successfully added!");
-                document.getElementById("comment-text").value = ""; // Clear comment input
-              })
-              .catch((error) => {
-                console.error("Error adding comment: ", error);
-              });
-          } else {
-            console.log("User document not found!");
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
-    } else {
-      console.log("No user is logged in.");
-    }
+              // Add the comment to Firestore
+              db.collection("comments")
+                .add({
+                  postId: postId,
+                  username: username,
+                  text: commentText,
+                  profile_picture:
+                    profile_picture || "img/default-profile-pic.png", // Default fallback
+                  userId: user.uid, // Store the user ID for deletion authorization
+                  timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                })
+                .then(() => {
+                  console.log("Comment successfully added!");
+                  document.getElementById("comment-text").value = ""; // Clear comment input
+                })
+                .catch((error) => {
+                  console.error("Error adding comment: ", error);
+                });
+            } else {
+              console.log("User document not found!");
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching user data:", error);
+          });
+      } else {
+        console.log("No user is logged in.");
+      }
+    });
   });
-});
 
 // Helper function to get the post ID from URL parameters
 function getPostIdFromURL() {
   const params = new URLSearchParams(window.location.search);
   return params.get("docID"); // Assumes post ID is passed as a query parameter named 'docID'
 }
-
-
