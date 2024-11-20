@@ -368,8 +368,8 @@ button[type="submit"]:hover {
     cursor: pointer; /* Indicates interactivity */
     color: #888; /* Optional: Default color for the trash icon */
     transition: color 0.3s;
-    height: 40px;
-    width: 40px;
+    height: 30px;
+    width: 30px;
 }
 
 .bi-trash:hover {
