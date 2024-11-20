@@ -85,6 +85,15 @@ body {
     margin: 0;
     grid-column: 1;
     grid-row: 1;
+    width: 45vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#user-handle {
+    width: 45vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -97,7 +106,7 @@ body {
 
 #text p {
     font-size: 0.9em;
-    
+    width: 45vw;
     grid-column: 1;
     grid-row: 3;
 }
