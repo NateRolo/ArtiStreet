@@ -261,4 +261,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    Welcome();
+});
+
+function Welcome() {
+    const referrer = document.referrer; 
+    console.log(document.referrer); 
+
+    const specificPage = "http://localhost:8080/html/login.html"; 
+
+    if (referrer == specificPage) {
+        WelcomeAlert();
+    } else {
+    }
+}
+
+function WelcomeAlert() {
+    alert("Welcome to Artistreet");
+}
 
