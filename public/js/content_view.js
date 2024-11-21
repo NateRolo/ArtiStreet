@@ -99,9 +99,11 @@ function loadComments(postId) {
         const commentElement = document.createElement("div");
         commentElement.classList.add("comment-item");
 
+        // let profilePic = userDoc.data().profile_picture;
+
         // Add profile image
         const profileImg = document.createElement("img");
-        profileImg.src = profile_picture || "img/default-profile-pic.png"; // Default fallback
+        profileImg.src = profile_picture || "/img/profileImage.png"; 
         profileImg.alt = `${username}'s Profile Picture`;
         profileImg.classList.add("comment-profile-img");
         profileImg.style.width = "40px";
@@ -195,7 +197,7 @@ document
                   username: username,
                   text: commentText,
                   profile_picture:
-                    profile_picture || "img/default-profile-pic.png", // Default fallback
+                    profile_picture || "/img/profileImage.png", // Default fallback
                   userId: user.uid, // Store the user ID for deletion authorization
                   timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 })
