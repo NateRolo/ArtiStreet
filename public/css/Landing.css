@@ -31,13 +31,11 @@ body {
 }
 
 .navbar-brand {
-    left: 50%;
     position: relative;
-    transform: translateX(-50%);
 }
 
 #navbar-logo {
-    width: 20vw;
+    width: 150px;
     height: auto;
     display: block;
 }
