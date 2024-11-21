@@ -80,22 +80,39 @@ async function displayPostsDynamically(collection, type = "all") {
 
         // Set image, title, location, and username
         const postPictureElement = newpost.querySelector('.post-picture');
+        const postWholeCard = newpost.querySelector('.post-card');
         const postTitleElement = newpost.querySelector('.post-title');
         const postProfilePictureElement = newpost.querySelector('.profileIcon');
 
-        if (postPictureElement && imgURL) {
-            postPictureElement.src = imgURL;
-            postPictureElement.onclick = () => {
-                window.location.href = `content_view.html?docID=${docID}`;
-            };
-        }
+   
 
-        if (postTitleElement) {
-            postTitleElement.innerHTML = title;
-            postTitleElement.onclick = () => {
+        if (postWholeCard) {
+            postWholeCard.onclick = () => {
                 window.location.href = `content_view.html?docID=${docID}`;
             };
+        
+            // Prevent clicks on child elements (e.g., buttons) from overriding the card click
+            const likeButton = newpost.querySelector('.post-like');
+            if (likeButton) {
+                likeButton.onclick = (event) => {
+                    event.stopPropagation(); // Prevent click event from bubbling up to the card
+                    toggleLike(docID);
+                };
+            }
+        
+            const postPictureElement = newpost.querySelector('.post-picture');
+            if (postPictureElement) {
+                postPictureElement.onclick = (event) => {
+                    event.stopPropagation(); // Prevent click event from bubbling up to the card
+                    window.location.href = `content_view.html?docID=${docID}`;
+                };
+            }
         }
+        
+
+        //shows the title
+        postTitleElement.innerHTML = title;
+        postPictureElement.src = imgURL;
 
         // set profile image
         if (postProfilePictureElement) {
