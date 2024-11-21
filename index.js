@@ -9,7 +9,7 @@ app.use("/img", express.static("./public/img"));
 app.use("/html", express.static("./app/html"));
 
 app.get("/", function (req, res) {
-    let doc = fs.readFileSync("./app/html/login.html", "utf-8");
+    let doc = fs.readFileSync("./app/html/sign_up.html", "utf-8");
     res.send(doc);
 });
 
