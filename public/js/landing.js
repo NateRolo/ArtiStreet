@@ -80,16 +80,22 @@ async function displayPostsDynamically(collection, type = "all") {
 
         // Set image, title, location, and username
         const postPictureElement = newpost.querySelector('.post-picture');
-        const postWholeCard = newpost.querySelector('.post-card');
+        const postTopBar = newpost.querySelector('.post-topbar');
+        const postBottomBar = newpost.querySelector('.post-bottombar');
         const postTitleElement = newpost.querySelector('.post-title');
         const postProfilePictureElement = newpost.querySelector('.profileIcon');
 
    
 
-        if (postWholeCard) {
-            postWholeCard.onclick = () => {
+        if (postTopBar || postBottomBar) {
+            postTopBar.onclick = () => {
                 window.location.href = `content_view.html?docID=${docID}`;
             };
+
+            postBottomBar.onclick = () => {
+                window.location.href = `content_view.html?docID=${docID}`;
+            };
+
         
             // Prevent clicks on child elements (e.g., buttons) from overriding the card click
             const likeButton = newpost.querySelector('.post-like');
