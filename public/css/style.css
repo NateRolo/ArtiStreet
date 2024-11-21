@@ -8,7 +8,7 @@ body {
 
 #navbar-logo {
     object-fit: contain;
-    width: 12vw;
+    max-width: 150px;
 }
 
 svg {
