@@ -287,6 +287,13 @@ body {
     color: whitesmoke;
 }
 
+/* .welcomeMsg{
+    display: none;
+    background-color: red;
+    width: 1fr;
+
+} */
+
 @media (max-width: 700px) {
     #pfp-container {
         width: 100px;

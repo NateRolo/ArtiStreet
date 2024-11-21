@@ -272,12 +272,18 @@ function Welcome() {
     const specificPage = "http://localhost:8080/html/login.html"; 
 
     if (referrer == specificPage) {
-        WelcomeAlert();
-    } else {
-    }
-}
 
-function WelcomeAlert() {
-    alert("Welcome to Artistreet");
+        Swal.fire({
+            title: "Welcome to Artistreet",
+            showConfirmButton: false,
+            timer: 500,
+            customClass: {
+                popup: "my-center-class"
+            }
+        });
+        
+    } else {
+        console.log("Referrer does not match. Function will not run.");
+    }
 }
 
