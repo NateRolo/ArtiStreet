@@ -8,7 +8,7 @@ body {
 
 #navbar-logo {
     object-fit: contain;
-    width: 20vw;
+    width: 150px;
     /* filter: drop-shadow(0 0 0.75rem black); */
     z-index: 1000;
 }
@@ -21,6 +21,11 @@ body {
     z-index: 1000;
 }
 
+#back {
+    width: 50px;
+    cursor: pointer;
+}
+
 #bottom-nav-mobile svg {
     width: 45px;
     height: 45px;
@@ -28,7 +33,7 @@ body {
 }
 
 .navbar-brand {
-    margin: auto;
+    float: left;
 }
 
 .inputs {
@@ -173,9 +178,6 @@ input[type="file"] {
 }
 
 @media screen and (max-width: 1200px) {
-    #navbar-desktop {
-        display: none;
-    }
 
     body {
         padding-bottom: 46px;
@@ -183,9 +185,6 @@ input[type="file"] {
 }
 
 @media screen and (min-width: 1200px) {
-    #navbar-mobile {
-        display: none;
-    }
 
     #bottom-nav-mobile {
         display: none;

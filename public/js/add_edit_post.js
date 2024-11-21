@@ -6,6 +6,7 @@ const imgUpload = document.getElementById("img-upload");
 const imgPreview = document.getElementById("img-upload-preview");
 const imgLabel = document.getElementById("img-label");
 const saveButton = document.getElementById("save_button");
+const backButton = document.getElementById('backButton');
 
 // Utility Function: Get Query String Parameter
 const getQueryParam = (param) => {
