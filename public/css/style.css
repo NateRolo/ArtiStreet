@@ -51,16 +51,12 @@ svg {
     box-shadow: 0 30px 50px black;
 }
 
-#topBtn {
-    background-color: #7e09f0;
-    border: solid 2px #7e09f0;
-    transition: 0.2s;
+#login-redirect {
+    font-size: 14pt;
 }
 
-#topBtn:hover {
-    transition: 0.2s;
-    background-color: #5706a6;
-    border: solid 2px #5706a6;
+#signup-redirect {
+    font-size: 14pt;
 }
 
 @media only screen and (min-width: 701px) {
