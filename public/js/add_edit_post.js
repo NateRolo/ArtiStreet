@@ -6,6 +6,7 @@ const imgUpload = document.getElementById("img-upload");
 const imgPreview = document.getElementById("img-upload-preview");
 const imgLabel = document.getElementById("img-label");
 const saveButton = document.getElementById("save_button");
+const backButton = document.getElementById('backButton');
 
 // Utility Function: Get Query String Parameter
 const getQueryParam = (param) => {
@@ -237,6 +238,11 @@ const deletePost = async (docId) => {
         alert("Failed to delete the post. Please try again.");
     }
 };
+
+backButton.addEventListener('click', () => {
+    // Navigate to the previous page
+    window.history.back();
+});
 
 // set nav button to active when clicked
 const navPostButton = document.getElementById("nav-post");

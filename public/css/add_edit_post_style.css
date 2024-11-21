@@ -8,7 +8,7 @@ body {
 
 #navbar-logo {
     object-fit: contain;
-    width: 20vw;
+    width: 150px;
     /* filter: drop-shadow(0 0 0.75rem black); */
     z-index: 1000;
 }
@@ -21,6 +21,11 @@ body {
     z-index: 1000;
 }
 
+#backButton {
+    width: 50px;
+    cursor: pointer;
+}
+
 #bottom-nav-mobile svg {
     width: 45px;
     height: 45px;
@@ -28,7 +33,7 @@ body {
 }
 
 .navbar-brand {
-    margin: auto;
+    float: left;
 }
 
 .inputs {
@@ -105,6 +110,24 @@ input[type="file"] {
     max-height: 100%;
 }
 
+#bottomNav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    justify-items: center;
+    background-color: rgba(202, 152, 251, 1);
+    position: fixed;
+    bottom: 0;
+    z-index: 1000;
+    padding: 5px 0;
+    padding: 0;
+}
+
+#bottomNav .nav-item{
+    width: 100%;
+    height: 100%;
+    border-radius: 0.375rem;
+}
 
 #bottomNav svg {
     width: 25px; 
@@ -155,9 +178,6 @@ input[type="file"] {
 }
 
 @media screen and (max-width: 1200px) {
-    #navbar-desktop {
-        display: none;
-    }
 
     body {
         padding-bottom: 46px;
@@ -165,9 +185,6 @@ input[type="file"] {
 }
 
 @media screen and (min-width: 1200px) {
-    #navbar-mobile {
-        display: none;
-    }
 
     #bottom-nav-mobile {
         display: none;
