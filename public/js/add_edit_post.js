@@ -239,6 +239,11 @@ const deletePost = async (docId) => {
     }
 };
 
+backButton.addEventListener('click', () => {
+    // Navigate to the previous page
+    window.history.back();
+});
+
 // set nav button to active when clicked
 const navPostButton = document.getElementById("nav-post");
 navPostButton.onload = navPostButton.classList.toggle("active");
