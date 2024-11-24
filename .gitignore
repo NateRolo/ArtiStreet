@@ -3,6 +3,6 @@
 node_modules/
 .vscode/
 firebaseimport.txt
-register.js
+cors.json
 package.json
 package-lock.json
