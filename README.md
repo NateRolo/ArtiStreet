@@ -13,6 +13,7 @@ List team members and/or short bio's here...
 **Technologies**: 
   - HTML5, CSS, JavaScript, Node.js, Express.js
   - Firebase API (Backend as a Service)
+    
 **Libraries/Resources**:
   - Bootstrap Icons for visual elements
   - Discord (for team communication and collaboration)
