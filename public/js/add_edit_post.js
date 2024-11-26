@@ -161,6 +161,16 @@ deleteButton.addEventListener("click", async () => {
     await deletePost(docId);
 });
 
+// hide post button if adding new post, change button to "post" instead of "save"
+function hideDeletePostButton() {
+    if (getQueryParam("docId") == null) {
+        document.getElementById("delete_button").style.display = "none";
+        document.getElementById("save_button").innerHTML = "Post";
+    }
+} hideDeletePostButton();
+
+
+
 // save changes button
 saveButton.addEventListener("click", async () => {
     const docId = getQueryParam("docId"); // Check if editing a post
