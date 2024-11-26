@@ -136,10 +136,10 @@ const saveOrUpdatePost = async (docId = null) => {
 
 
 // Event Listeners
-imgLabel.addEventListener("click", () => imgUpload.click());
-imgPreview.addEventListener("click", () => imgUpload.click());
-imgUpload.addEventListener("change", () => {
+const handleFileSelection = (event) => {
+    event.stopPropagation(); // Ensure the event does not bubble up
     const file = imgUpload.files[0];
+    console.log("File selected: ", file);
     if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -152,7 +152,27 @@ imgUpload.addEventListener("change", () => {
         imgLabel.style.display = "block";
         imgPreview.style.display = "none";
     }
-});
+};
+
+// File upload behaviours
+const triggerFileInput = (event) => {
+    event.preventDefault(); 
+    imgUpload.click();
+};
+
+
+const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), delay);
+    };
+};
+
+// Add Event Listeners
+imgLabel.addEventListener("click", triggerFileInput);
+imgPreview.addEventListener("click", debounce(triggerFileInput, 200));
+imgUpload.addEventListener("change", handleFileSelection);
 
 // delete post button
 const deleteButton = document.getElementById("delete_button");
