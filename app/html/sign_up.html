@@ -45,8 +45,13 @@
             <label for="username">Username</label>
           </div>
           <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="userHandle" placeholder="User Handle">
-            <label for="userHandle">User Handle</label>
+            <div id="userHandleMessage" style="display: none; color: red; font-size: 0.9em;">
+              Your user handle is permanent. Choose wisely!
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="userHandle" placeholder="User Handle">
+              <label for="userHandle">User Handle</label>
+            </div>            
           </div>
           <div class="form-floating mb-3">
             <input type="email" class="form-control" id="email" placeholder="name@example.com">
