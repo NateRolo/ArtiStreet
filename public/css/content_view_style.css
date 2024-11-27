@@ -251,6 +251,10 @@ body {
     #bottom-nav-mobile {
         display: none;
     }
+
+    body {
+        padding-bottom: 46px;
+    }
 }
 
 /* Styling for the comment section */

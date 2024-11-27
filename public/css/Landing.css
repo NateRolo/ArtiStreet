@@ -121,7 +121,7 @@ body {
 .post-card {
     display: grid;
     grid-template-rows: auto auto auto;
-    gap: 10px;
+    
     width: 100%;
     max-width: 500px;
     border-radius: 10px;

@@ -136,10 +136,10 @@ const saveOrUpdatePost = async (docId = null) => {
 
 
 // Event Listeners
-imgLabel.addEventListener("click", () => imgUpload.click());
-imgPreview.addEventListener("click", () => imgUpload.click());
-imgUpload.addEventListener("change", () => {
+const handleFileSelection = (event) => {
+    event.stopPropagation(); // Ensure the event does not bubble up
     const file = imgUpload.files[0];
+    console.log("File selected: ", file);
     if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -152,7 +152,27 @@ imgUpload.addEventListener("change", () => {
         imgLabel.style.display = "block";
         imgPreview.style.display = "none";
     }
-});
+};
+
+// File upload behaviours
+const triggerFileInput = (event) => {
+    event.preventDefault(); 
+    imgUpload.click();
+};
+
+
+const debounce = (func, delay) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), delay);
+    };
+};
+
+// Add Event Listeners
+imgLabel.addEventListener("click", triggerFileInput);
+imgPreview.addEventListener("click", debounce(triggerFileInput, 200));
+imgUpload.addEventListener("change", handleFileSelection);
 
 // delete post button
 const deleteButton = document.getElementById("delete_button");
@@ -160,6 +180,16 @@ deleteButton.addEventListener("click", async () => {
     const docId = getQueryParam("docId"); // Get the post ID from the query string
     await deletePost(docId);
 });
+
+// hide post button if adding new post, change button to "post" instead of "save"
+function hideDeletePostButton() {
+    if (getQueryParam("docId") == null) {
+        document.getElementById("delete_button").style.display = "none";
+        document.getElementById("save_button").innerHTML = "Post";
+    }
+} hideDeletePostButton();
+
+
 
 // save changes button
 saveButton.addEventListener("click", async () => {
