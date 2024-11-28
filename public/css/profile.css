@@ -126,16 +126,18 @@ body {
 #log-out {
     font-size: 0.8em;
     border: none;
-    background-color: rgb(46, 0, 91);
+    background-color: lightgray;
     color: white;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 5px; 
     grid-column: 2;
+    transition: 0.2s;
 }
 
 #log-out:hover {
     background-color: rgb(34, 3, 66);
+    transition: 0.2s;
 }
 
 
@@ -185,6 +187,9 @@ body {
 
 .post-title {
     font-weight: bold;
+    font-size: 18pt;
+    width: 100%;
+    padding-left: 10px;
 }
 
 .post-location {
@@ -380,12 +385,5 @@ body {
     .post-kebab {
         width: 30px;
         height: 30px;
-    }
-
-    .post-title,
-    .post-location,
-    .post-user,
-    .post-time {
-        font-size: 0.8em;
     }
 
