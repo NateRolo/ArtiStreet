@@ -126,8 +126,8 @@ body {
 #log-out {
     font-size: 0.8em;
     border: none;
-    background-color: rgb(46, 0, 91);
-    color: white;
+    background-color: lightgrey;
+    color: slategray;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 5px; 
@@ -136,7 +136,8 @@ body {
 }
 
 #log-out:hover {
-    background-color: #8115fc;
+    background-color: grey;
+    color: white;
     transition: 0.2s;
 }
 
