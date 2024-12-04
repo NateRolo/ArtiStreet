@@ -19,7 +19,11 @@ const populatePostForm = async (docId) => {
     try {
         const postDoc = await db.collection("posts").doc(docId).get();
         if (!postDoc.exists) {
-            alert("Post not found!");
+            Swal.fire({
+                icon: "error",
+                title: "Post Not Found",
+                text: "The post you are looking for doesn't exist."
+            });
             return;
         }
 
@@ -41,7 +45,11 @@ const populatePostForm = async (docId) => {
         }
     } catch (error) {
         console.error("Error fetching post data:", error);
-        alert("Failed to load post details.");
+        Swal.fire({
+            icon: "error",
+            title: "Failed to Load Post",
+            text: "There was an error while fetching the post details."
+        });
     }
 };
 
@@ -59,20 +67,32 @@ const saveOrUpdatePost = async (docId = null) => {
 
     // Validate input fields
     if (!title) {
-        alert("Title cannot be empty or contain only spaces.");
+        Swal.fire({
+            icon: "error",
+            title: "Validation Error",
+            text: "Title cannot be empty or contain only spaces."
+        });
         titleInput.style.border = "2px solid red"; // Highlight invalid input
         return;
     }
     titleInput.style.border = ""; // Reset border if valid
 
     if (!location || (!file && !docId)) {
-        alert("Please fill in all required fields.");
+        Swal.fire({
+            icon: "error",
+            title: "Validation Error",
+            text: "Please fill in all required fields."
+        });
         return;
     }
 
     const locationPattern = /^[^,]+,\s*[^,]+$/;
     if (!locationPattern.test(location)) {
-        alert("Please enter the location in 'street, city' format.");
+        Swal.fire({
+            icon: "error",
+            title: "Validation Error",
+            text: "Please enter the location in 'street, city' format."
+        });
         locationInput.style.border = "2px solid red";
         return;
     }
@@ -82,13 +102,21 @@ const saveOrUpdatePost = async (docId = null) => {
     try {
         const user = firebase.auth().currentUser;
         if (!user) {
-            alert("You need to be logged in to post.");
+            Swal.fire({
+                icon: "error",
+                title: "Authentication Error",
+                text: "You need to be logged in to post."
+            });
             return;
         }
 
         const userDoc = await db.collection("users").doc(user.uid).get();
         if (!userDoc.exists) {
-            alert("User profile not found.");
+            Swal.fire({
+                icon: "error",
+                title: "User Error",
+                text: "User profile not found."
+            });
             return;
         }
 
@@ -119,18 +147,36 @@ const saveOrUpdatePost = async (docId = null) => {
         if (docId) {
             // Update existing post
             await db.collection("posts").doc(docId).update(postData);
-            alert("Post updated successfully!");
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Post updated successfully!",
+                showConfirmButton: false,
+                timer: 1500,
+            });
         } else {
             // Create new post
             const postRef = db.collection("posts").doc();
             await postRef.set(postData);
-            alert("Post saved successfully!");
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Post saved successfully!",
+                showConfirmButton: false,
+                timer: 1500,
+            });
         }
 
-        window.location.href = "/html/Landing.html";
+        setTimeout(() => {
+            window.location.href = "/html/Landing.html";
+        }, 1500);
     } catch (error) {
         console.error("Error saving/updating post:", error);
-        alert("Failed to save the post. Please try again.");
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to save the post. Please try again."
+        });
     }
 };
 
@@ -159,7 +205,6 @@ const triggerFileInput = (event) => {
     event.preventDefault(); 
     imgUpload.click();
 };
-
 
 const debounce = (func, delay) => {
     let timeout;
@@ -190,7 +235,6 @@ function hideDeletePostButton() {
 } hideDeletePostButton();
 
 
-
 // save changes button
 saveButton.addEventListener("click", async () => {
     const docId = getQueryParam("docId"); // Check if editing a post
@@ -198,18 +242,26 @@ saveButton.addEventListener("click", async () => {
 });
 
 const cancelEdit = () => {
-    const confirmCancel = confirm("Are you sure you want to cancel? Any unsaved changes will be lost.");
-    if (confirmCancel) {
-        window.location.href = "/html/profile.html"; // Redirect to profile.html
-    }
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Any unsaved changes will be lost.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, cancel',
+        cancelButtonText: 'No, keep editing',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "/html/profile.html"; // Redirect to profile.html
+        }
+    });
 };
+
 
 // Attach to Cancel Button
 const cancelButton = document.getElementById("cancel_button"); // Ensure the button has this ID in your HTML
 if (cancelButton) {
     cancelButton.addEventListener("click", cancelEdit);
 }
-
 
 // Populate form on page load
 window.addEventListener("DOMContentLoaded", async () => {
@@ -222,17 +274,33 @@ window.addEventListener("DOMContentLoaded", async () => {
 // delete post function 
 const deletePost = async (docId) => {
     if (!docId) {
-        alert("Post ID is missing. Unable to delete post.");
+        Swal.fire({
+            icon: "error",
+            title: "Post Not Found",
+            text: "Post ID is missing. Unable to delete post."
+        });
         return;
     }
 
-    const confirmDelete = confirm("Are you sure you want to delete this post? This action cannot be undone.");
-    if (!confirmDelete) return;
+    const confirmDelete = await Swal.fire({
+        title: "Are you sure?",
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel"
+    });
+
+    if (!confirmDelete.isConfirmed) return;
 
     try {
         const user = firebase.auth().currentUser; // Get the current authenticated user
         if (!user) {
-            alert("You must be logged in to delete a post.");
+            Swal.fire({
+                icon: "error",
+                title: "Not Logged In",
+                text: "You must be logged in to delete a post."
+            });
             return;
         }
 
@@ -240,7 +308,11 @@ const deletePost = async (docId) => {
         const postDoc = await postRef.get();
 
         if (!postDoc.exists) {
-            alert("Post not found!");
+            Swal.fire({
+                icon: "error",
+                title: "Post Not Found",
+                text: "Post not found!"
+            });
             return;
         }
 
@@ -248,7 +320,11 @@ const deletePost = async (docId) => {
 
         // Check if the current user is the owner of the post
         if (postData.user.uid !== user.uid) {
-            alert("You are not authorized to delete this post.");
+            Swal.fire({
+                icon: "error",
+                title: "Unauthorized",
+                text: "You are not authorized to delete this post."
+            });
             return;
         }
 
@@ -261,11 +337,20 @@ const deletePost = async (docId) => {
         // Delete the post document from Firestore
         await postRef.delete();
 
-        alert("Post deleted successfully!");
+        Swal.fire({
+            icon: "success",
+            title: "Post Deleted",
+            text: "Post deleted successfully!"
+        });
+
         window.location.href = "/html/Landing.html"; // Redirect to landing page after deletion
     } catch (error) {
         console.error("Error deleting post:", error);
-        alert("Failed to delete the post. Please try again.");
+        Swal.fire({
+            icon: "error",
+            title: "Failed to Delete Post",
+            text: "Please try again later."
+        });
     }
 };
 
