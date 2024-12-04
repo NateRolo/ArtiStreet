@@ -365,73 +365,23 @@ async function editProfile() {
 
     // save profile button
     document.getElementById("save-profile").addEventListener("click", async () => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "Save your profile changes?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Save",
-            cancelButtonText: "Cancel"
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    const newUsername = document.getElementById("edit-username").value;
-                    await saveProfile();
-                    await updateUserPostsUsername(newUsername);
-    
-                    Swal.fire({
-                        title: "Success!",
-                        text: "Your profile has been updated successfully.",
-                        icon: "success",
-                        timer: 1000,
-                        showConfirmButton: false,
-                    });
-                    
-                    setTimeout(() => {
-                        restoreUI(profileHeader, editButton, postsElement, navTabElement);
-                    }, 2000);
-                } catch (error) {
-                    console.error("Error saving profile:", error);
-                    Swal.fire({
-                        title: "Error",
-                        text: "Failed to save your profile. Please try again.",
-                        icon: "error",
-                    });
-                }
-            }
-        });
+        const confirmSave = confirm("Are you sure you want to save your changes?");
+        const newUsername = document.getElementById("edit-username").value;
+        if (confirmSave) {
+            await saveProfile();
+            await updateUserPostsUsername(newUsername);
+            restoreUI(profileHeader, editButton, postsElement, navTabElement);
+            alert("Your profile has been updated successfully!");
+        }
     });
 
     // Event Listener: Cancel edit
-// Cancel edit button
-document.getElementById("cancel-edit").addEventListener("click", () => {
-    Swal.fire({
-        title: "Cancel editing?",
-        text: "Your changes will not be saved.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, cancel",
-        cancelButtonText: "Keep Editing"
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-                title: "Cancelled",
-                text: "No changes were saved.",
-                icon: "info",
-                timer: 1000,
-                showConfirmButton: false,
-            });
-
-            setTimeout(() => {
-                restoreUI(profileHeader, editButton, postsElement, navTabElement);
-            }, 2000);
+    document.getElementById("cancel-edit").addEventListener("click", () => {
+        const confirmCancel = confirm("Are you sure you want to cancel editing?");
+        if (confirmCancel) {
+            restoreUI(profileHeader, editButton, postsElement, navTabElement);
         }
     });
-});
 }
 
 // Restore the original UI
@@ -510,44 +460,17 @@ profileButton.onload = profileButton.classList.toggle("active");
 
 //Log out button when click it redirect you to login page
 
-document.getElementById("log-out").addEventListener("click", () => {
-    Swal.fire({
-        title: "Are you sure?",
-        text: "You will be logged out and redirected to the login page.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, log me out!",
-        cancelButtonText: "Cancel",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            firebase.auth()
-                .signOut()
-                .then(() => {
-                    Swal.fire({
-                        title: "Logged Out",
-                        text: "You have been successfully logged out.",
-                        icon: "success",
-                        timer: 2000, // 2-second delay for user feedback
-                        showConfirmButton: false,
-                    });
-
-                    // Redirect to login page after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = "./login.html";
-                    }, 2000);
-                })
-                .catch((error) => {
-                    console.error("Error logging out:", error);
-                    Swal.fire({
-                        title: "Error",
-                        text: "Failed to log out. Please try again.",
-                        icon: "error",
-                    });
-                });
-        }
-    });
+document.getElementById('log-out').addEventListener('click', () => {
+    const confirmLogout = confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+        firebase.auth().signOut().then(() => {
+            // Redirect to login page or show a confirmation message
+            window.location.href = './login.html';
+        }).catch((error) => {
+            console.error('Error logging out:', error);
+            alert('Failed to log out. Please try again.');
+        });
+    }
 });
 
 
