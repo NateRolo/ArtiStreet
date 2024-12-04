@@ -98,13 +98,13 @@ async function displayPostsDynamically(collection, type = "all") {
 
         
             // Prevent clicks on child elements (e.g., buttons) from overriding the card click
-            // const likeButton = newpost.querySelector('.post-like');
-            // if (likeButton) {
-            //     likeButton.onclick = (event) => {
-            //         event.stopPropagation(); // Prevent click event from bubbling up to the card
-            //         toggleLike(docID);
-            //     };
-            // }
+            const likeButton = newpost.querySelector('.post-like');
+            if (likeButton) {
+                likeButton.onclick = (event) => {
+                    event.stopPropagation(); // Prevent click event from bubbling up to the card
+                    toggleLike(docID);
+                };
+            }
         
             const postPictureElement = newpost.querySelector('.post-picture');
             if (postPictureElement) {
