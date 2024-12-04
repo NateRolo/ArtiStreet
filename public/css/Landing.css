@@ -183,10 +183,10 @@ body {
 }
 
 .post-user {
-    
+    padding-left: 3%;
     grid-column: 2;
     grid-row: 1;
-    font-size: 1.5em;
+    font-size: 1.3em;
     margin: 0;
     vertical-align: top;
 }
@@ -196,6 +196,7 @@ body {
     color: gray;
     grid-column: 2;
     grid-row: 2;
+    padding-left: 3%;
 }
 
 .post-like {
@@ -206,10 +207,14 @@ body {
 }
 
 .post-like-count {
+    width: 150%;
+    grid-column-end: 3;
+    padding-left: 95%;
+    float: right;
     transform: translateY(5px);
     font-size: 0.8em;
     color: gray;
-    grid-column: 3;
+    grid-column-start: 2;
     grid-row: 1;
 }
 
@@ -337,11 +342,3 @@ body {
         width: 30px;
         height: 30px;
     }
-
-    .post-title,
-    .post-location,
-    .post-user,
-    .post-time {
-        font-size: 0.8em;
-    }
-
