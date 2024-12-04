@@ -207,7 +207,7 @@ body {
 }
 
 .post-like-count {
-    width: 150%;
+    width: 120%;
     grid-column-end: 3;
     padding-left: 95%;
     float: right;
