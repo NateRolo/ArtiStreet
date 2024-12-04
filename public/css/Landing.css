@@ -136,7 +136,7 @@ body {
 /* Post Top Bar */
 .post-topbar {
     display: grid;
-    grid-template-columns: 1fr auto; 
+    grid-template-columns: 60% auto; 
     align-items: center;
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.05); 
