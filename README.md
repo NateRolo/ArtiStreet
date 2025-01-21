@@ -1,18 +1,18 @@
-# Project Title: ArtiStreet
+# ArtiStreet
 
-## 1. Project Description
+## 1. Description
 ArtiStreet is a web application that allows users to post and view pictures of street art in real time. Users can contribute by sharing street art they find, interact with posts by adding comments and likes, and manage their profiles. The app's core features include posting pictures, editing or deleting posts, adding comments and likes, and editing profiles. ArtiStreet is built with the goal of helping people discover and appreciate street art in their communities.
 
-## 2. Names of Contributors
+## 2. Contributors
 List team members and/or short bio's here... 
-* Hey there, I'm Nate! This is a very stressful program but I'm enjoying the ride. 
-* I'm Jacob. I'm 18, fresh out of high school, and a future indie game dev. Artist and guitarist.
-* Tommy Nguyen: Age 19 have some programming exp
+* Nathan Oloresisimo
+* Jacob Fonesca
+* Tommy Nguyen
 	
 ## 3. Technologies and Resources Used
 **Technologies**: 
   - HTML5, CSS, JavaScript, Node.js, Express.js
-  - Firebase API (Backend as a Service)
+  - Firestore
     
 **Libraries/Resources**:
   - Bootstrap Icons for visual elements
